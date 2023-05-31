@@ -109,14 +109,14 @@ export const create = async (
       city_id,
       description,
     };
-    console.log(data);
-    // const result: IPost = database.createDocument(
-    //   databaseId,
-    //   collectionId,
-    //   ID.unique(),
-    //   data
-    // );
-    // return result;
+
+    const result: IPost = database.createDocument(
+      databaseId,
+      collectionId,
+      ID.unique(),
+      data
+    );
+    return result;
   } catch (error) {
     console.error(error);
     throw error;

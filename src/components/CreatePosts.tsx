@@ -9,6 +9,9 @@ import {
   Typography,
 } from '@mui/material';
 import { create } from '../api/posts';
+import Category from './Selectors/Category';
+import StateSelector from './Selectors/StateSelector';
+import CitySelector from './Selectors/CitySelector';
 
 const styles: Record<string, CSSProperties> = {
   formContainer: { marginTop: '1rem', padding: '0 1rem' },
@@ -40,19 +43,26 @@ const CreatePostForm = () => {
     }
   };
 
+  const handleCategoryChange = (categoryId: string) => {
+    setCategory(categoryId);
+  };
+  const handleStateChange = (stateId: string) => {
+    setState(stateId);
+    setCity(''); // Reset selected city when the state changes
+  };
+
+  const handleCityChange = (cityId: string) => {
+    setCity(cityId);
+  };
+
   return (
     <div style={styles.formContainer}>
-      <Typography variant='h6' style={styles.formItem}>
-        Create a New Post
-      </Typography>
-      <FormControl fullWidth style={styles.formItem}>
-        <InputLabel>Category</InputLabel>
-        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <MenuItem value='category1'>Category 1</MenuItem>
-          <MenuItem value='category2'>Category 2</MenuItem>
-          <MenuItem value='category3'>Category 3</MenuItem>
-        </Select>
-      </FormControl>
+      <div style={styles.formItem}>
+        <Typography variant='h6'>Create a New Post</Typography>
+      </div>
+      <div style={styles.formItem}>
+        <Category onChange={handleCategoryChange} />
+      </div>
       <TextField
         label='Title'
         fullWidth
@@ -68,22 +78,12 @@ const CreatePostForm = () => {
         type='number'
         style={styles.formItem}
       />
-      <FormControl fullWidth style={styles.formItem}>
-        <InputLabel>State</InputLabel>
-        <Select value={state} onChange={(e) => setState(e.target.value)}>
-          <MenuItem value='state1'>State 1</MenuItem>
-          <MenuItem value='state2'>State 2</MenuItem>
-          <MenuItem value='state3'>State 3</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth style={styles.formItem}>
-        <InputLabel>City</InputLabel>
-        <Select value={city} onChange={(e) => setCity(e.target.value)}>
-          <MenuItem value='city1'>City 1</MenuItem>
-          <MenuItem value='city2'>City 2</MenuItem>
-          <MenuItem value='city3'>City 3</MenuItem>
-        </Select>
-      </FormControl>
+      <div style={styles.formItem}>
+        <StateSelector onChange={handleStateChange} />
+      </div>
+      <div style={styles.formItem}>
+        <CitySelector stateId={state} onChange={handleCityChange} />
+      </div>
       <TextField
         label='Description'
         fullWidth
