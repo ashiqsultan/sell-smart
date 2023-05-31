@@ -7,7 +7,10 @@ import {
   FormControl,
   InputLabel,
   Typography,
+  Snackbar,
+  Alert,
 } from '@mui/material';
+
 import { create } from '../api/posts';
 import Category from './Selectors/Category';
 import StateSelector from './Selectors/StateSelector';
@@ -25,21 +28,69 @@ const CreatePostForm = () => {
   const [city, setCity] = useState('');
   const [description, setDescription] = useState('');
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
+
+  const validateFields = (): boolean => {
+    // Check for empty strings or NaN number values
+    if (
+      !category ||
+      !title ||
+      isNaN(parseInt(price)) ||
+      !state ||
+      !city ||
+      !description
+    ) {
+      console.error('Fields are not valid');
+      return false;
+    }
+    return true;
+  };
+
+  const resetForm = (): void => {
+    // Reset the states to their initial values
+    setCategory('');
+    setTitle('');
+    setPrice('');
+    setState('');
+    setCity('');
+    setDescription('');
+  };
+
+  const showSnackbar = (message: string, severity: 'success' | 'error') => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  const closeSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   const handleCreatePost = async () => {
-    try {
-      const result = await create(
-        category,
-        title,
-        parseInt(price),
-        state,
-        city,
-        description
-      );
-      console.log(result);
-      // Handle success or show a success message
-    } catch (error) {
-      console.error(error);
-      // Handle error or show an error message
+    const areFieldsValid = validateFields(); // Check if fields are valid
+    if (areFieldsValid) {
+      try {
+        const result = await create(
+          category,
+          title,
+          parseInt(price),
+          state,
+          city,
+          description
+        );
+        console.log(result);
+        resetForm(); // Reset the form fields
+        showSnackbar('Post created successfully', 'success');
+      } catch (error) {
+        console.error(error);
+        // Handle error or show an error message
+      }
+    } else {
+      showSnackbar('Please fill out all the fields before submitting', 'error');
     }
   };
 
@@ -57,9 +108,26 @@ const CreatePostForm = () => {
 
   return (
     <div style={styles.formContainer}>
-      <div style={styles.formItem}>
-        <Typography variant='h6'>Create a New Post</Typography>
-      </div>
+      {/* Snackbar component */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={closeSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={closeSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      {/* Form title */}
+      <Typography variant='h6' style={{ marginBlock: '10px' }}>
+        Create a New Post
+      </Typography>
+      {/* Form items */}
       <div style={styles.formItem}>
         <Category onChange={handleCategoryChange} />
       </div>
