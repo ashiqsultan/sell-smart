@@ -109,6 +109,7 @@ export const create = async (
       city_id,
       description,
     };
+    console.log(data);
     // const result: IPost = database.createDocument(
     //   databaseId,
     //   collectionId,

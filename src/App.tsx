@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Home from './components/Home';
 import AppBar from './components/AppBar';
 import Login from './components/Login';
+import CreatePost from './components/CreatePosts';
 
 const theme = createTheme({
   palette: {
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/create-post' element={<CreatePost />} />
           <Route path='*' element={<div>404 Page Not Found</div>} />
         </Routes>
       </Router>
