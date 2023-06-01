@@ -4,6 +4,7 @@ import Home from './components/Home';
 import AppBar from './components/AppBar';
 import Login from './components/Login';
 import CreatePost from './components/CreatePosts';
+import PostDetails from './components/PostDetails';
 
 const theme = createTheme({
   palette: {
@@ -22,6 +23,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/create-post' element={<CreatePost />} />
+          <Route path='/post/:postId' element={<PostDetails />} />
           <Route path='*' element={<div>404 Page Not Found</div>} />
         </Routes>
       </Router>

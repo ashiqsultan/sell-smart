@@ -3,7 +3,7 @@ import config from '../config';
 import client from './client';
 import { getInfo } from './account';
 
-interface IPost {
+export interface IPost {
   user_id: string;
   category_id: string;
   title: string;
@@ -124,6 +124,21 @@ export const create = async (
       data
     );
     return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getById = async (id: string): Promise<IPostDoc> => {
+  try {
+    const docs = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('$id', [id])]
+    );
+    console.log(docs);
+    return docs.documents[0];
   } catch (error) {
     console.error(error);
     throw error;
