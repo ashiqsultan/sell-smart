@@ -4,20 +4,27 @@ import { DeleteOutline } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-const FileUpload = ({ onFilesChange }) => {
-  const [files, setFiles] = useState([]);
+interface FileUploadProps {
+  onFilesChange: (files: File[]) => void;
+}
 
-  const onDrop = useCallback((acceptedFiles) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFilesChange }) => {
+  const [files, setFiles] = useState<File[]>([]);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
   }, []);
 
-  const removeFile = (index) => {
+  const removeFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/jpeg, image/png',
+    accept: {
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpeg'],
+    },
     maxSize: 5 * 1024 * 1024, // 5MB
   });
 
