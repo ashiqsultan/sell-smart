@@ -7,5 +7,8 @@ const config = {
     posts: '64763c98e85448c672e1',
     categories: '64763bb560b2e7b968ce',
   },
+  buckets: {
+    post_images: '64786f3fea694831764f',
+  },
 };
 export default config;

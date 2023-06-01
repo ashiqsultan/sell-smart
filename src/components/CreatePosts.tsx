@@ -10,11 +10,13 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
+import FileUpload from './FileUpload';
 
 import { create } from '../api/posts';
 import Category from './Selectors/Category';
 import StateSelector from './Selectors/StateSelector';
 import CitySelector from './Selectors/CitySelector';
+import { upload } from '../api/postImages';
 
 const styles: Record<string, CSSProperties> = {
   formContainer: { marginTop: '1rem', padding: '0 1rem' },
@@ -27,6 +29,7 @@ const CreatePostForm = () => {
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [description, setDescription] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -70,7 +73,20 @@ const CreatePostForm = () => {
     setSnackbarOpen(false);
   };
 
+  const uploadFiles = async (files: File[]) => {
+    try {
+      const uploadedFileIds = await Promise.all(
+        files.map((file) => upload(file))
+      );
+      return uploadedFileIds;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   const handleCreatePost = async () => {
+    const uploadedFileIds = await uploadFiles(uploadedFiles);
     const areFieldsValid = validateFields(); // Check if fields are valid
     if (areFieldsValid) {
       try {
@@ -161,6 +177,9 @@ const CreatePostForm = () => {
         rows={4}
         style={styles.formItem}
       />
+      <div style={styles.formItem}>
+        <FileUpload onFilesChange={setUploadedFiles} />
+      </div>
       <Button variant='contained' color='primary' onClick={handleCreatePost}>
         Create Post
       </Button>
