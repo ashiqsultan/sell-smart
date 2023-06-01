@@ -1,4 +1,4 @@
-import { Storage, ID, Models } from 'appwrite';
+import { Storage, ID } from 'appwrite';
 import config from '../config';
 import client from './client';
 
@@ -14,9 +14,9 @@ export const upload = async (file: File): Promise<string> => {
     throw error;
   }
 };
-export const getFileById = async (fileId: string): Promise<Models.File> => {
+export const getFileById = async (fileId: string): Promise<URL> => {
   try {
-    const result = await storage.getFile(bucketId, fileId);
+    const result = storage.getFilePreview(bucketId, fileId);
     return result;
   } catch (error) {
     console.error(error);

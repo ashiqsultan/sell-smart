@@ -2,17 +2,15 @@ import { useEffect, useState } from 'react';
 import { Box, Typography, Divider, Grid } from '@mui/material';
 import { IPost, getById } from '../api/posts';
 import { useParams } from 'react-router-dom';
+import PostImageViewer from './PostImageViewer';
 
 const PostDetails: React.FC = () => {
   const { postId } = useParams();
-
   const [post, setPost] = useState<IPost | null>(null);
 
   useEffect(() => {
-    // Fetch post details by postId using the getById API
     const fetchPostDetails = async () => {
       try {
-        // Replace `getById` with the actual API function to fetch post details
         const postDetails = await getById(postId || '');
         setPost(postDetails);
       } catch (error) {
@@ -24,7 +22,7 @@ const PostDetails: React.FC = () => {
   }, [postId]);
 
   if (!post) {
-    return null; // Render null or loading state while fetching the data
+    return null;
   }
 
   const {
@@ -84,7 +82,7 @@ const PostDetails: React.FC = () => {
 
         <Grid item xs={12}>
           <Typography variant='subtitle1'>Image IDs:</Typography>
-          <Typography>{image_ids?.join(', ')}</Typography>
+          <PostImageViewer imageIds={image_ids || []} />
         </Grid>
       </Grid>
     </Box>
