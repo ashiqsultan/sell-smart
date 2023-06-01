@@ -61,6 +61,7 @@ const CreatePostForm = () => {
     setState('');
     setCity('');
     setDescription('');
+    setUploadedFiles([]);
   };
 
   const showSnackbar = (message: string, severity: 'success' | 'error') => {
@@ -75,9 +76,10 @@ const CreatePostForm = () => {
 
   const uploadFiles = async (files: File[]) => {
     try {
-      const uploadedFileIds = await Promise.all(
-        files.map((file) => upload(file))
+      const promises: Array<Promise<string>> = files.map((file) =>
+        upload(file)
       );
+      const uploadedFileIds = await Promise.all(promises);
       return uploadedFileIds;
     } catch (error) {
       console.error(error);
@@ -86,17 +88,21 @@ const CreatePostForm = () => {
   };
 
   const handleCreatePost = async () => {
-    const uploadedFileIds = await uploadFiles(uploadedFiles);
     const areFieldsValid = validateFields(); // Check if fields are valid
     if (areFieldsValid) {
       try {
+        let uploadedFileIds: string[] = [];
+        if (uploadedFiles.length > 0) {
+          uploadedFileIds = await uploadFiles(uploadedFiles);
+        }
         const result = await create(
           category,
           title,
           parseInt(price),
           state,
           city,
-          description
+          description,
+          uploadedFileIds
         );
         console.log(result);
         resetForm(); // Reset the form fields

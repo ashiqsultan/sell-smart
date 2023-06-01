@@ -1,4 +1,4 @@
-import { Databases, Query, ID } from 'appwrite';
+import { Databases, Query, ID, Models } from 'appwrite';
 import config from '../config';
 import client from './client';
 import { getInfo } from './account';
@@ -11,7 +11,10 @@ interface IPost {
   state_id: string;
   city_id: string;
   description?: string;
+  image_ids?: string[];
 }
+
+interface IPostDoc extends IPost, Models.Document {}
 
 const database = new Databases(client());
 const databaseId = config.database_id;
@@ -96,8 +99,9 @@ export const create = async (
   price: number,
   state_id: string,
   city_id: string,
-  description: string
-) => {
+  description: string,
+  image_ids: string[]
+): Promise<IPostDoc> => {
   try {
     const user_id = await getInfo();
     const data: IPost = {
@@ -108,9 +112,12 @@ export const create = async (
       state_id,
       city_id,
       description,
+      image_ids,
     };
 
-    const result: IPost = database.createDocument(
+    console.log('input data', data);
+
+    const result: IPostDoc = await database.createDocument<IPostDoc>(
       databaseId,
       collectionId,
       ID.unique(),
