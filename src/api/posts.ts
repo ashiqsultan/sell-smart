@@ -24,7 +24,23 @@ export const getAll = async (): Promise<IPostDoc[]> => {
   try {
     const response = await database.listDocuments<IPostDoc>(
       databaseId,
-      collectionId
+      collectionId,
+      [Query.orderDesc('$createdAt')]
+    );
+    console.log(response.documents);
+
+    return response.documents;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const filterByState = async (stateId: string): Promise<IPostDoc[]> => {
+  try {
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('state_id', [stateId])]
     );
     return response.documents;
   } catch (error) {
@@ -32,47 +48,46 @@ export const getAll = async (): Promise<IPostDoc[]> => {
     throw error;
   }
 };
-export const filterByState = async (stateId: string) => {
+export const filterByStateCity = async (
+  stateId: string,
+  cityId: string
+): Promise<IPostDoc[]> => {
   try {
-    const response = await database.listDocuments(databaseId, collectionId, [
-      Query.equal('state_id', [stateId]),
-    ]);
-    return response;
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('state_id', [stateId]), Query.equal('city_id', [cityId])]
+    );
+    return response.documents;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-export const filterByStateCity = async (stateId: string, cityId: string) => {
+export const filterTitle = async (keyword: string): Promise<IPostDoc[]> => {
   try {
-    const response = await database.listDocuments(databaseId, collectionId, [
-      Query.equal('state_id', [stateId]),
-      Query.equal('city_id', [cityId]),
-    ]);
-    return response;
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [Query.search('title', keyword)]
+    );
+    return response.documents;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-export const filterTitle = async (keyword: string) => {
+export const filterTitleState = async (
+  keyword: string,
+  stateId: string
+): Promise<IPostDoc[]> => {
   try {
-    const response = await database.listDocuments(databaseId, collectionId, [
-      Query.search('title', keyword),
-    ]);
-    return response;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-export const filterTitleState = async (keyword: string, stateId: string) => {
-  try {
-    const response = await database.listDocuments(databaseId, collectionId, [
-      Query.search('title', keyword),
-      Query.equal('state_id', [stateId]),
-    ]);
-    return response;
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [Query.search('title', keyword), Query.equal('state_id', [stateId])]
+    );
+    return response.documents;
   } catch (error) {
     console.error(error);
     throw error;
@@ -82,14 +97,18 @@ export const filterTitleStateCity = async (
   keyword: string,
   stateId: string,
   cityId: string
-) => {
+): Promise<IPostDoc[]> => {
   try {
-    const response = await database.listDocuments(databaseId, collectionId, [
-      Query.search('title', keyword),
-      Query.equal('state_id', [stateId]),
-      Query.equal('city_id', [cityId]),
-    ]);
-    return response;
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [
+        Query.search('title', keyword),
+        Query.equal('state_id', [stateId]),
+        Query.equal('city_id', [cityId]),
+      ]
+    );
+    return response.documents;
   } catch (error) {
     console.error(error);
     throw error;
