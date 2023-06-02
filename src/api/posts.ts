@@ -14,16 +14,19 @@ export interface IPost {
   image_ids?: string[];
 }
 
-interface IPostDoc extends IPost, Models.Document {}
+export interface IPostDoc extends IPost, Models.Document {}
 
 const database = new Databases(client());
 const databaseId = config.database_id;
 const collectionId = config.collectionIds.posts;
 
-export const getAll = async () => {
+export const getAll = async (): Promise<IPostDoc[]> => {
   try {
-    const response = await database.listDocuments(databaseId, collectionId);
-    return response;
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId
+    );
+    return response.documents;
   } catch (error) {
     console.error(error);
     throw error;
