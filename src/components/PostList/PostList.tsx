@@ -1,9 +1,10 @@
-import { useEffect, useReducer, ChangeEvent } from 'react';
+import { useEffect, useReducer, ChangeEvent, useCallback } from 'react';
 import { TextField, List, ListItem, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import * as postsAPI from '../../api/posts';
 import { IPostDoc } from '../../api/posts';
 import PostListItem from './PostListItem';
+import debounce from 'lodash-es/debounce';
 
 const filterPostsByTitle = async (title: string): Promise<IPostDoc[]> => {
   const filteredPosts: IPostDoc[] = await postsAPI.filterTitle(title);
@@ -35,25 +36,34 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
+const debounceDelay = 500;
 const PostList: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'SET_KEYWORD', payload: event.target.value });
-  };
-
-  useEffect(() => {
-    const fetchFilteredPosts = async () => {
+  const debouncedFilterPosts = useCallback(
+    debounce(async (title: string) => {
       try {
-        const filteredPosts = await filterPostsByTitle(state.keyword);
+        const filteredPosts = await filterPostsByTitle(title);
         dispatch({ type: 'SET_FILTERED_POSTS', payload: filteredPosts });
       } catch (error) {
         console.error(error);
       }
-    };
+    }, debounceDelay),
+    []
+  );
 
-    fetchFilteredPosts();
-  }, [state.keyword]);
+  const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newKeyword = event.target.value;
+    dispatch({ type: 'SET_KEYWORD', payload: newKeyword });
+    debouncedFilterPosts(newKeyword);
+  };
+
+  useEffect(() => {
+    return () => {
+      // Cleanup the debounced function on component unmount
+      debouncedFilterPosts.cancel();
+    };
+  }, []);
 
   return (
     <Box sx={{ m: 2 }}>
