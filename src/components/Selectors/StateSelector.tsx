@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { getAll, IState } from '../../api/states';
+import { PostContext } from '../../context/PostContext';
 
-interface StateSelectorProps {
-  onChange: (stateId: string) => void;
-}
-
-const StateSelector: React.FC<StateSelectorProps> = ({ onChange }) => {
+const StateSelector: React.FC = () => {
+  const { state, dispatch } = useContext(PostContext);
   const [states, setStates] = useState<IState[]>([]);
-  const [selectedState, setSelectedState] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,14 +22,13 @@ const StateSelector: React.FC<StateSelectorProps> = ({ onChange }) => {
 
   const handleStateChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const stateId = event.target.value as string;
-    setSelectedState(stateId);
-    onChange(stateId); // Pass the selected state $id back to the parent component
+    dispatch({ type: 'SET_STATE_ID', payload: stateId });
   };
 
   return (
     <FormControl fullWidth>
       <InputLabel>State</InputLabel>
-      <Select value={selectedState} onChange={handleStateChange}>
+      <Select value={state.stateId} onChange={handleStateChange}>
         {states.map((state) => (
           <MenuItem key={state.$id} value={state.$id}>
             {state.name}

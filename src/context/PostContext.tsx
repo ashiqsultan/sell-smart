@@ -1,6 +1,8 @@
 import { createContext, useReducer, useEffect } from 'react';
 import { IPostDoc } from '../api/posts';
 import * as postsAPI from '../api/posts';
+import { IState } from '../api/states';
+import { ICity, getByStateId } from '../api/cities';
 
 const filterPostsByTitle = async (title: string): Promise<IPostDoc[]> => {
   const filteredPosts: IPostDoc[] = await postsAPI.filterTitle(title);
@@ -10,15 +12,24 @@ const filterPostsByTitle = async (title: string): Promise<IPostDoc[]> => {
 interface State {
   keyword: string;
   filteredPosts: IPostDoc[];
+  stateId: string;
+  cities: ICity[];
+  cityId: string;
 }
 
 type Action =
   | { type: 'SET_KEYWORD'; payload: string }
-  | { type: 'SET_FILTERED_POSTS'; payload: IPostDoc[] };
+  | { type: 'SET_FILTERED_POSTS'; payload: IPostDoc[] }
+  | { type: 'SET_STATE_ID'; payload: string }
+  | { type: 'SET_CITIES'; payload: ICity[] }
+  | { type: 'SET_CITY_ID'; payload: string };
 
 const initialState: State = {
   keyword: '',
   filteredPosts: [],
+  stateId: '',
+  cities: [],
+  cityId: '',
 };
 
 const reducer = (state: State, action: Action): State => {
@@ -27,6 +38,12 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, keyword: action.payload };
     case 'SET_FILTERED_POSTS':
       return { ...state, filteredPosts: action.payload };
+    case 'SET_STATE_ID':
+      return { ...state, stateId: action.payload };
+    case 'SET_CITIES':
+      return { ...state, cities: action.payload };
+    case 'SET_CITY_ID':
+      return { ...state, cityId: action.payload };
     default:
       return state;
   }
@@ -52,9 +69,21 @@ export const PostProvider: React.FC = ({ children }) => {
         console.error(error);
       }
     };
-
     fetchFilteredPosts();
   }, [state.keyword]);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const cities = await getByStateId(state.stateId);
+        dispatch({ type: 'SET_CITIES', payload: cities });
+        dispatch({ type: 'SET_CITY_ID', payload: '' });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCities();
+  }, [state.stateId]);
 
   return (
     <PostContext.Provider value={{ state, dispatch }}>

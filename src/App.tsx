@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Home from './components/Home';
+import Home from './pages/Home';
 import AppBar from './components/AppBar';
 import Login from './components/Login';
 import CreatePost from './components/CreatePosts';
