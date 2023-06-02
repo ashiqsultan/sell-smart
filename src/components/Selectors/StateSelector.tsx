@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { getAll, IState } from '../../api/states';
-import { PostContext } from '../../context/PostContext';
+import { AppContext } from '../../context/AppContext';
 
 const StateSelector: React.FC = () => {
-  const { state, dispatch } = useContext(PostContext);
+  const { state, dispatch } = useContext(AppContext);
   const [states, setStates] = useState<IState[]>([]);
 
   useEffect(() => {

@@ -2,10 +2,10 @@ import { useContext, ChangeEvent } from 'react';
 import { TextField, List, ListItem, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PostListItem from './PostListItem';
-import { PostContext } from '../../context/PostContext';
+import { AppContext } from '../../context/AppContext';
 
 const PostList: React.FC = () => {
-  const { state, dispatch } = useContext(PostContext);
+  const { state, dispatch } = useContext(AppContext);
 
   const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newKeyword = event.target.value;

@@ -6,7 +6,7 @@ import Login from './components/Login';
 import CreatePost from './components/CreatePosts';
 import PostDetails from './components/PostDetails';
 import PostList from './components/PostList/PostList';
-import { PostProvider } from './context/PostContext';
+import { AppContextProvider } from './context/AppContext';
 
 const theme = createTheme({
   palette: {
@@ -21,7 +21,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <AppBar />
-        <PostProvider>
+        <AppContextProvider>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login />} />
@@ -30,7 +30,7 @@ function App() {
             <Route path='/post/:postId' element={<PostDetails />} />
             <Route path='*' element={<div>404 Page Not Found</div>} />
           </Routes>
-        </PostProvider>
+        </AppContextProvider>
       </Router>
     </ThemeProvider>
   );

@@ -49,7 +49,7 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-export const PostContext = createContext<{
+export const AppContext = createContext<{
   state: State;
   dispatch: React.Dispatch<Action>;
 }>({
@@ -57,7 +57,7 @@ export const PostContext = createContext<{
   dispatch: () => null,
 });
 
-export const PostProvider: React.FC = ({ children }) => {
+export const AppContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -86,8 +86,8 @@ export const PostProvider: React.FC = ({ children }) => {
   }, [state.stateId]);
 
   return (
-    <PostContext.Provider value={{ state, dispatch }}>
+    <AppContext.Provider value={{ state, dispatch }}>
       {children}
-    </PostContext.Provider>
+    </AppContext.Provider>
   );
 };
