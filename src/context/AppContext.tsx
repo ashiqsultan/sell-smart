@@ -2,6 +2,8 @@ import { createContext, useReducer, useEffect } from 'react';
 import { IPostDoc } from '../api/posts';
 import { ICity, getByStateId } from '../api/cities';
 import filterPosts from '../util/filterPosts';
+import * as categoriesAPI from '../api/categories';
+import { ICategory } from '../api/categories';
 
 export interface IAppState {
   keyword: string;
@@ -9,6 +11,8 @@ export interface IAppState {
   stateId: string;
   cities: ICity[];
   cityId: string;
+  categories: ICategory[];
+  categoryId: string;
 }
 
 type Action =
@@ -16,7 +20,9 @@ type Action =
   | { type: 'SET_FILTERED_POSTS'; payload: IPostDoc[] }
   | { type: 'SET_STATE_ID'; payload: string }
   | { type: 'SET_CITIES'; payload: ICity[] }
-  | { type: 'SET_CITY_ID'; payload: string };
+  | { type: 'SET_CITY_ID'; payload: string }
+  | { type: 'SET_CATEGORIES'; payload: ICategory[] } // Updated action type: set categories
+  | { type: 'SET_CATEGORY_ID'; payload: string }; // Updated action type: set categoryId
 
 const initialState: IAppState = {
   keyword: '',
@@ -24,6 +30,8 @@ const initialState: IAppState = {
   stateId: '',
   cities: [],
   cityId: '',
+  categories: [],
+  categoryId: '',
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
@@ -38,6 +46,10 @@ const reducer = (state: IAppState, action: Action): IAppState => {
       return { ...state, cities: action.payload };
     case 'SET_CITY_ID':
       return { ...state, cityId: action.payload };
+    case 'SET_CATEGORIES':
+      return { ...state, categories: action.payload };
+    case 'SET_CATEGORY_ID':
+      return { ...state, categoryId: action.payload };
     default:
       return state;
   }
@@ -55,6 +67,19 @@ export const AppContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categories: ICategory[] = await categoriesAPI.getAll(); // Replace with your actual API call
+        dispatch({ type: 'SET_CATEGORIES', payload: categories });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const filteredPosts = await filterPosts(state);
@@ -65,7 +90,7 @@ export const AppContextProvider: React.FC = ({ children }) => {
     };
 
     fetchData();
-  }, [state.keyword, state.stateId, state.cityId]);
+  }, [state.keyword, state.stateId, state.cityId, state.categoryId]);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -77,6 +102,7 @@ export const AppContextProvider: React.FC = ({ children }) => {
         console.error(error);
       }
     };
+
     fetchCities();
   }, [state.stateId]);
 
