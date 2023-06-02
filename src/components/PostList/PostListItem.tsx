@@ -26,7 +26,7 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
   }, [post.image_ids]);
 
   return (
-    <Card sx={{ mb: 2 }}>
+    <Card sx={{ mb: 2, width: '100%' }}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
           {imageURL && (

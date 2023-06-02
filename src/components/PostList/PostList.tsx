@@ -1,11 +1,11 @@
 import { useEffect, useReducer, ChangeEvent } from 'react';
+import { TextField, List, ListItem, Box } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import * as postsAPI from '../../api/posts';
 import { IPostDoc } from '../../api/posts';
 import PostListItem from './PostListItem';
 
-// API function to filter posts based on title
 const filterPostsByTitle = async (title: string): Promise<IPostDoc[]> => {
-  // Replace with your actual API call to filter posts by title
   const filteredPosts: IPostDoc[] = await postsAPI.filterTitle(title);
   return filteredPosts;
 };
@@ -56,19 +56,25 @@ const PostList: React.FC = () => {
   }, [state.keyword]);
 
   return (
-    <div>
-      <input
-        type='text'
+    <Box sx={{ m: 2 }}>
+      <TextField
+        fullWidth
         value={state.keyword}
         onChange={handleKeywordChange}
-        placeholder='Search by title'
+        label='Search'
+        variant='outlined'
+        InputProps={{
+          startAdornment: <SearchIcon />,
+        }}
       />
-      <div>
+      <List>
         {state.filteredPosts.map((post) => (
-          <PostListItem key={post.$id} post={post} />
+          <ListItem key={post.$id}>
+            <PostListItem post={post} />
+          </ListItem>
         ))}
-      </div>
-    </div>
+      </List>
+    </Box>
   );
 };
 
