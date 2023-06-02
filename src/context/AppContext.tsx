@@ -1,15 +1,9 @@
 import { createContext, useReducer, useEffect } from 'react';
 import { IPostDoc } from '../api/posts';
-import * as postsAPI from '../api/posts';
-import { IState } from '../api/states';
 import { ICity, getByStateId } from '../api/cities';
+import filterPosts from '../util/filterPosts';
 
-const filterPostsByTitle = async (title: string): Promise<IPostDoc[]> => {
-  const filteredPosts: IPostDoc[] = await postsAPI.filterTitle(title);
-  return filteredPosts;
-};
-
-interface State {
+export interface IAppState {
   keyword: string;
   filteredPosts: IPostDoc[];
   stateId: string;
@@ -24,7 +18,7 @@ type Action =
   | { type: 'SET_CITIES'; payload: ICity[] }
   | { type: 'SET_CITY_ID'; payload: string };
 
-const initialState: State = {
+const initialState: IAppState = {
   keyword: '',
   filteredPosts: [],
   stateId: '',
@@ -32,7 +26,7 @@ const initialState: State = {
   cityId: '',
 };
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (state: IAppState, action: Action): IAppState => {
   switch (action.type) {
     case 'SET_KEYWORD':
       return { ...state, keyword: action.payload };
@@ -50,7 +44,7 @@ const reducer = (state: State, action: Action): State => {
 };
 
 export const AppContext = createContext<{
-  state: State;
+  state: IAppState;
   dispatch: React.Dispatch<Action>;
 }>({
   state: initialState,
@@ -61,16 +55,17 @@ export const AppContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    const fetchFilteredPosts = async () => {
+    const fetchData = async () => {
       try {
-        const filteredPosts = await filterPostsByTitle(state.keyword);
+        const filteredPosts = await filterPosts(state);
         dispatch({ type: 'SET_FILTERED_POSTS', payload: filteredPosts });
       } catch (error) {
         console.error(error);
       }
     };
-    fetchFilteredPosts();
-  }, [state.keyword]);
+
+    fetchData();
+  }, [state.keyword, state.stateId, state.cityId]);
 
   useEffect(() => {
     const fetchCities = async () => {
