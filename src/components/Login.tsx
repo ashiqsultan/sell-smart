@@ -3,9 +3,12 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/account';
+import { useContext, useEffect } from 'react';
+import { AppContext } from '../context/AppContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { state, dispatch } = useContext(AppContext);
   const handleSubmit = async (event: any) => {
     try {
       event.preventDefault();
@@ -14,12 +17,20 @@ const Login = () => {
       const password = data.get('password') as string;
       const isLoginRequest = await login(email, password);
       if (isLoginRequest.$id) {
+        dispatch({ type: 'SET_LOGGED_IN', payload: true });
         navigate('/');
       }
     } catch (error) {
       console.error('Login Error');
     }
   };
+
+  useEffect(() => {
+    // Redirect if already logged in
+    if (state.isLoggedIn) {
+      navigate('/');
+    }
+  }, [state.isLoggedIn]);
 
   return (
     <Box component='form' onSubmit={handleSubmit} noValidate>

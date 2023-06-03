@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Home from './pages/Home';
+import { AppContextProvider } from './context/AppContext';
 import AppBar from './components/AppBar';
-import Login from './components/Login';
 import CreatePost from './components/CreatePosts';
 import PostDetails from './components/PostDetails';
 import PostList from './components/PostList/PostList';
-import { AppContextProvider } from './context/AppContext';
+import Home from './pages/Home';
 import Signup from './pages/Signup';
+import Login from './pages/Login';
 
 const theme = createTheme({
   palette: {
