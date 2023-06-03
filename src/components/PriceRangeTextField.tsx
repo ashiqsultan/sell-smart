@@ -12,7 +12,7 @@ const PriceMinMaxField: React.FC<PriceTextFieldProps> = ({ isMinPrice }) => {
 
   const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value);
-    if (newValue > 0) {
+    if (newValue >= 0) {
       if (isMinPrice) {
         dispatch({ type: 'SET_MIN_PRICE', payload: newValue });
       } else {

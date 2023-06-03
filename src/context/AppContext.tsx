@@ -13,8 +13,8 @@ export interface IAppState {
   cityId: string;
   categories: ICategory[];
   categoryId: string;
-  minPrice: number;
-  maxPrice: number;
+  minPrice: number | null;
+  maxPrice: number | null;
 }
 
 type Action =
@@ -36,8 +36,8 @@ const initialState: IAppState = {
   cityId: '',
   categories: [],
   categoryId: '',
-  minPrice: 0,
-  maxPrice: 9999999,
+  minPrice: null,
+  maxPrice: null,
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
