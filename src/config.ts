@@ -6,6 +6,7 @@ const config = {
     user_info: '64760786370d74c148cc',
     posts: '64763c98e85448c672e1',
     categories: '64763bb560b2e7b968ce',
+    user_details: '647b29c041bf45439256',
   },
   buckets: {
     post_images: '64786f3fea694831764f',

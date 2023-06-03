@@ -7,6 +7,7 @@ import CreatePost from './components/CreatePosts';
 import PostDetails from './components/PostDetails';
 import PostList from './components/PostList/PostList';
 import { AppContextProvider } from './context/AppContext';
+import Signup from './pages/Signup';
 
 const theme = createTheme({
   palette: {
@@ -28,6 +29,7 @@ function App() {
             <Route path='/create-post' element={<CreatePost />} />
             <Route path='/posts' element={<PostList />} />
             <Route path='/post/:postId' element={<PostDetails />} />
+            <Route path='/signup' element={<Signup />} />
             <Route path='*' element={<div>404 Page Not Found</div>} />
           </Routes>
         </AppContextProvider>
