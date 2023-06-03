@@ -13,6 +13,8 @@ export interface IAppState {
   cityId: string;
   categories: ICategory[];
   categoryId: string;
+  minPrice: number;
+  maxPrice: number;
 }
 
 type Action =
@@ -21,8 +23,10 @@ type Action =
   | { type: 'SET_STATE_ID'; payload: string }
   | { type: 'SET_CITIES'; payload: ICity[] }
   | { type: 'SET_CITY_ID'; payload: string }
-  | { type: 'SET_CATEGORIES'; payload: ICategory[] } // Updated action type: set categories
-  | { type: 'SET_CATEGORY_ID'; payload: string }; // Updated action type: set categoryId
+  | { type: 'SET_CATEGORIES'; payload: ICategory[] }
+  | { type: 'SET_CATEGORY_ID'; payload: string }
+  | { type: 'SET_MIN_PRICE'; payload: number }
+  | { type: 'SET_MAX_PRICE'; payload: number };
 
 const initialState: IAppState = {
   keyword: '',
@@ -32,6 +36,8 @@ const initialState: IAppState = {
   cityId: '',
   categories: [],
   categoryId: '',
+  minPrice: 0,
+  maxPrice: 9999999,
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
@@ -50,6 +56,10 @@ const reducer = (state: IAppState, action: Action): IAppState => {
       return { ...state, categories: action.payload };
     case 'SET_CATEGORY_ID':
       return { ...state, categoryId: action.payload };
+    case 'SET_MIN_PRICE':
+      return { ...state, minPrice: action.payload };
+    case 'SET_MAX_PRICE':
+      return { ...state, maxPrice: action.payload };
     default:
       return state;
   }
@@ -90,7 +100,14 @@ export const AppContextProvider: React.FC = ({ children }) => {
     };
 
     fetchData();
-  }, [state.keyword, state.stateId, state.cityId, state.categoryId]);
+  }, [
+    state.keyword,
+    state.stateId,
+    state.cityId,
+    state.categoryId,
+    state.minPrice,
+    state.maxPrice,
+  ]);
 
   useEffect(() => {
     const fetchCities = async () => {
