@@ -1,41 +1,24 @@
-import { getAll, ICategory } from '../../api/categories';
-import { useEffect, useState } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { useContext } from 'react';
+import { AppContext } from '../../context/AppContext';
+import { ICategory } from '../../api/categories';
 
-interface CategoryProps {
-  onChange: (categoryId: string) => void;
-}
-
-const Category: React.FC<CategoryProps> = ({ onChange }) => {
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const categoryList = await getAll();
-        setCategories(categoryList);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
+const Category: React.FC = () => {
+  const { state, dispatch } = useContext(AppContext);
+  const { categories, categoryId } = state;
 
   const handleCategoryChange = (
     event: React.ChangeEvent<{ value: unknown }>
   ) => {
     const categoryId = event.target.value as string;
-    setSelectedCategory(categoryId);
-    // Pass the selected category $id back to the parent component
-    onChange(categoryId);
+    dispatch({ type: 'SET_CATEGORY_ID', payload: categoryId });
   };
 
   return (
     <FormControl fullWidth>
       <InputLabel>Category</InputLabel>
-      <Select value={selectedCategory} onChange={handleCategoryChange}>
-        {categories.map((category) => (
+      <Select value={categoryId} onChange={handleCategoryChange}>
+        {categories.map((category: ICategory) => (
           <MenuItem key={category.$id} value={category.$id}>
             {category.name}
           </MenuItem>

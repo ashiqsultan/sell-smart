@@ -9,9 +9,11 @@ import {
   getAll,
 } from '../api/posts';
 
-const filterPosts = async (state: IAppState): Promise<IPostDoc[]> => {
-  const { keyword, stateId, cityId } = state;
-
+const apiFilters = async (
+  keyword: string,
+  stateId: string,
+  cityId: string
+): Promise<IPostDoc[]> => {
   // Condition: stateId, cityId, and keyword are present
   if (stateId && cityId && keyword) {
     return await filterTitleStateCity(keyword, stateId, cityId);
@@ -34,8 +36,21 @@ const filterPosts = async (state: IAppState): Promise<IPostDoc[]> => {
   }
   // Default case
   return await getAll();
+};
+const filterPosts = async (state: IAppState): Promise<IPostDoc[]> => {
+  const { keyword, stateId, cityId, categoryId } = state;
+  const apiFilteredPosts: IPostDoc[] = await apiFilters(
+    keyword,
+    stateId,
+    cityId
+  );
+  // Filter post by Category id
+  if (categoryId) {
+    return apiFilteredPosts.filter(
+      (post: IPostDoc) => post.category_id === categoryId
+    );
+  }
 
-  // TODO
-  // Need to integrate non api filters from state
+  return apiFilteredPosts;
 };
 export default filterPosts;
