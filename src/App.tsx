@@ -21,8 +21,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <AppBar />
         <AppContextProvider>
+          <AppBar />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login />} />

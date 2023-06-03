@@ -4,9 +4,13 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/material';
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
+import { logout } from '../api/account';
 
 export default function MainAppBar() {
   const navigate = useNavigate();
+  const { state, dispatch } = useContext(AppContext);
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -14,6 +18,11 @@ export default function MainAppBar() {
 
   const handleCreateAccountClick = () => {
     navigate('/signup');
+  };
+
+  const handleLogoutClick = async () => {
+    await logout();
+    dispatch({ type: 'SET_LOGGED_IN', payload: false });
   };
 
   return (
@@ -42,28 +51,39 @@ export default function MainAppBar() {
               </Typography>
             </div>
             <Box display={'flex'} columnGap={'2rem'}>
-              <Button
-                variant='outlined'
-                // style={{ outline: '1px solid red' }}
-                color='inherit'
-                onClick={handleLoginClick}
-              >
-                Login
-              </Button>
-              <Button
-                variant='contained'
-                sx={{
-                  background: 'white',
-                  color: (theme) => theme.palette.primary.main,
-                  ':hover': {
-                    color: (theme) => theme.palette.primary.main,
-                    background: '#e1e1e1',
-                  },
-                }}
-                onClick={handleCreateAccountClick}
-              >
-                Create Account
-              </Button>
+              {!state.isLoggedIn ? (
+                <>
+                  <Button
+                    variant='outlined'
+                    color='inherit'
+                    onClick={handleLoginClick}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    variant='contained'
+                    sx={{
+                      background: 'white',
+                      color: (theme) => theme.palette.primary.main,
+                      ':hover': {
+                        color: (theme) => theme.palette.primary.main,
+                        background: '#e1e1e1',
+                      },
+                    }}
+                    onClick={handleCreateAccountClick}
+                  >
+                    Create Account
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant='outlined'
+                  color='inherit'
+                  onClick={handleLogoutClick}
+                >
+                  Logout
+                </Button>
+              )}
             </Box>
           </div>
         </Toolbar>

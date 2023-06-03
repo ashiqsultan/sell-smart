@@ -4,6 +4,7 @@ import { ICity, getByStateId } from '../api/cities';
 import filterPosts from '../util/filterPosts';
 import * as categoriesAPI from '../api/categories';
 import { ICategory } from '../api/categories';
+import { getInfo } from '../api/account';
 
 export interface IAppState {
   keyword: string;
@@ -15,6 +16,7 @@ export interface IAppState {
   categoryId: string;
   minPrice: number | null;
   maxPrice: number | null;
+  isLoggedIn: boolean;
 }
 
 type Action =
@@ -26,7 +28,8 @@ type Action =
   | { type: 'SET_CATEGORIES'; payload: ICategory[] }
   | { type: 'SET_CATEGORY_ID'; payload: string }
   | { type: 'SET_MIN_PRICE'; payload: number }
-  | { type: 'SET_MAX_PRICE'; payload: number };
+  | { type: 'SET_MAX_PRICE'; payload: number }
+  | { type: 'SET_LOGGED_IN'; payload: boolean };
 
 const initialState: IAppState = {
   keyword: '',
@@ -38,6 +41,7 @@ const initialState: IAppState = {
   categoryId: '',
   minPrice: null,
   maxPrice: null,
+  isLoggedIn: false,
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
@@ -60,6 +64,8 @@ const reducer = (state: IAppState, action: Action): IAppState => {
       return { ...state, minPrice: action.payload };
     case 'SET_MAX_PRICE':
       return { ...state, maxPrice: action.payload };
+    case 'SET_LOGGED_IN':
+      return { ...state, isLoggedIn: action.payload };
     default:
       return state;
   }
@@ -85,7 +91,19 @@ export const AppContextProvider: React.FC = ({ children }) => {
         console.error(error);
       }
     };
+    const getSessionInfo = async () => {
+      try {
+        const info = await getInfo();
+        if (info.$id) {
+          dispatch({ type: 'SET_LOGGED_IN', payload: true });
+        }
+      } catch (error) {
+        dispatch({ type: 'SET_LOGGED_IN', payload: false });
+        console.error(error);
+      }
+    };
 
+    getSessionInfo();
     fetchCategories();
   }, []);
 

@@ -36,6 +36,7 @@ export const getInfo = async () => {
 export const logout = async () => {
   try {
     const response = await account.deleteSession('current');
+    console.log(response);
     return response;
   } catch (error) {
     console.error(error);
