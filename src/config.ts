@@ -7,6 +7,8 @@ const config = {
     posts: '64763c98e85448c672e1',
     categories: '64763bb560b2e7b968ce',
     user_details: '647b29c041bf45439256',
+    chats: '647c7086e456637205ea',
+    messages: '647c70dd35af5743be0f',
   },
   buckets: {
     post_images: '64786f3fea694831764f',
