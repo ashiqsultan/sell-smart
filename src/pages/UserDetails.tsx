@@ -1,5 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Typography, Box, Avatar, Grid } from '@mui/material';
+import {
+  Typography,
+  Box,
+  Avatar,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Button,
+  CardActions,
+} from '@mui/material';
 import { AccountCircle, Description, Phone, Today } from '@mui/icons-material';
 import { getById, IUserDetailsDoc } from '../api/userDetails';
 import { useParams } from 'react-router-dom';
@@ -27,44 +38,56 @@ const UserDetails: React.FC = () => {
   }
 
   const { name, bio, phone_number, $createdAt } = userDetails;
-
+  const handlePhoneCall = () => {
+    window.location.href = `tel:${phone_number}`;
+  };
   return (
-    <Box p={4}>
-      <Typography variant='h4'>User Details</Typography>
-      <Box display='flex' alignItems='center' mt={4}>
-        <Avatar sx={{ mr: 2 }}>
-          <AccountCircle />
-        </Avatar>
-        <Typography variant='h6'>{name}</Typography>
-      </Box>
-      <Box mt={4}>
-        <Grid container spacing={2} alignItems='center'>
-          <Grid item>
-            <Description />
-          </Grid>
-          <Grid item>
-            <Typography variant='subtitle1'>{bio}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} alignItems='center'>
-          <Grid item>
-            <Phone />
-          </Grid>
-          <Grid item>
-            <Typography variant='subtitle1'>{phone_number}</Typography>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} alignItems='center'>
-          <Grid item>
-            <Today />
-          </Grid>
-          <Grid item>
-            <Typography variant='subtitle1'>
-              Member Since: {new Date($createdAt).toLocaleDateString()}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Box>
+    <Box px={5}>
+      <Card>
+        {/* <CardHeader title={name} /> */}
+        <CardContent>
+          <Box display='flex' alignItems='center' mt={2}>
+            <Avatar sx={{ mr: 2 }}>
+              <AccountCircle />
+            </Avatar>
+            <Typography variant='h6'>{name}</Typography>
+          </Box>
+          <Box mt={4}>
+            <Grid container spacing={2} alignItems='center'>
+              <Grid item>
+                <Today />
+              </Grid>
+              <Grid item>
+                <Typography variant='body1'>
+                  Member Since:{' '}
+                  {new Date($createdAt).toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2} alignItems='center' mt={1}>
+              <Grid item>
+                <Typography variant='subtitle1' fontWeight={600}>
+                  About
+                </Typography>
+                <Typography variant='body1'>{bio}</Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </CardContent>
+        <CardActions sx={{ marginLeft: '5px' }}>
+          <Button
+            color='primary'
+            startIcon={<Phone />}
+            onClick={handlePhoneCall}
+          >
+            Call
+          </Button>
+        </CardActions>
+      </Card>
     </Box>
   );
 };
