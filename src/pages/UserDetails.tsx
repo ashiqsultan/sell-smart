@@ -3,6 +3,7 @@ import { Typography, Box, Avatar, Grid } from '@mui/material';
 import { AccountCircle, Description, Phone, Today } from '@mui/icons-material';
 import { getById, IUserDetailsDoc } from '../api/userDetails';
 import { useParams } from 'react-router-dom';
+import ModalProgress from '../components/ModalProgress';
 
 const UserDetails: React.FC = () => {
   const [userDetails, setUserDetails] = useState<IUserDetailsDoc | null>(null);
@@ -22,7 +23,7 @@ const UserDetails: React.FC = () => {
   }, [userId]);
 
   if (!userDetails) {
-    return <div>Loading...</div>; // Add a loading indicator while fetching the data
+    return <ModalProgress isOpen={true}></ModalProgress>;
   }
 
   const { name, bio, phone_number, $createdAt } = userDetails;
