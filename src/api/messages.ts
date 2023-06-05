@@ -65,3 +65,17 @@ export const create = async (
     throw error;
   }
 };
+
+export const getById = async (id: string): Promise<IMessageDoc> => {
+  try {
+    const response = await database.listDocuments<IMessageDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('$id', [id])]
+    );
+    return response.documents[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

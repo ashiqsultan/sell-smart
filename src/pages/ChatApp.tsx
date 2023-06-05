@@ -27,6 +27,17 @@ const ChatApp = () => {
       console.error(error);
     }
   }, [chatId]);
+  const updateMessagesArray = useCallback(
+    async (id) => {
+      try {
+        const newMsg = await messageAPI.getById(id);
+        setMessages((messages) => [...messages, newMsg]);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [chatId]
+  );
   const handleSend = async () => {
     if (chatId) {
       await messageAPI.create(chatId, newMessage);
@@ -41,8 +52,12 @@ const ChatApp = () => {
 
   const chatIdSub = useCallback(() => {
     subscription = client().subscribe([channel], (response) => {
-      console.log(response);
-      fetchMessages();
+      console.log(response?.payload?.last_message_id);
+      if (response?.payload?.last_message_id) {
+        const msgId = response?.payload?.last_message_id;
+        updateMessagesArray(msgId);
+      }
+      // fetchMessages();
     });
   }, [channel]);
 
