@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Typography,
   Box,
@@ -6,19 +7,21 @@ import {
   Grid,
   Card,
   CardContent,
-  CardHeader,
-  IconButton,
   Button,
   CardActions,
 } from '@mui/material';
-import { AccountCircle, Description, Phone, Today } from '@mui/icons-material';
+
+import { AccountCircle, Phone, Today, Chat } from '@mui/icons-material';
 import { getById, IUserDetailsDoc } from '../api/userDetails';
 import { useParams } from 'react-router-dom';
 import ModalProgress from '../components/ModalProgress';
+import { getOrCreateChatIdByIds } from '../api/chats';
+import { getInfo } from '../api/account';
 
 const UserDetails: React.FC = () => {
   const [userDetails, setUserDetails] = useState<IUserDetailsDoc | null>(null);
   const { userId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -40,6 +43,24 @@ const UserDetails: React.FC = () => {
   const { name, bio, phone_number, $createdAt } = userDetails;
   const handlePhoneCall = () => {
     window.location.href = `tel:${phone_number}`;
+  };
+  const handleStartChat = async () => {
+    // TODO
+    // Get chat by user ids
+    // One is session user id and another is the this param userId
+    try {
+      const sessionUser = await getInfo();
+      if (sessionUser.$id && userId) {
+        const chatId = await getOrCreateChatIdByIds(sessionUser.$id, userId);
+        console.log('handleStartChat chat id');
+        console.log(chatId);
+        navigate(`/chat/${chatId}`);
+      } else {
+        console.log('You need to login to Chat');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <Box px={5}>
@@ -78,7 +99,21 @@ const UserDetails: React.FC = () => {
             </Grid>
           </Box>
         </CardContent>
-        <CardActions sx={{ marginLeft: '5px' }}>
+        <CardActions
+          sx={{
+            marginLeft: '5px',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            columnGap: '1rem',
+          }}
+        >
+          <Button
+            color='primary'
+            startIcon={<Chat />}
+            onClick={handleStartChat}
+          >
+            Chat
+          </Button>
           <Button
             color='primary'
             startIcon={<Phone />}

@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import UserDetails from './pages/UserDetails';
+import ChatApp from './pages/ChatApp';
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,7 @@ function App() {
             <Route path='/post/:postId' element={<PostDetails />} />
             <Route path='/signup' element={<Signup />} />
             <Route path='/user/:userId' element={<UserDetails />} />
+            <Route path='/chat/:chatId' element={<ChatApp />} />
             <Route path='*' element={<div>404 Page Not Found</div>} />
           </Routes>
         </AppContextProvider>

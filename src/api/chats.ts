@@ -25,7 +25,10 @@ export const getByUserIds = async (
       Query.equal('user1_id', [user1_id]),
       Query.equal('user2_id', [user2_id]),
     ]);
-    return response.documents[0].$id;
+    if (Array.isArray(response.documents) && response?.documents[0]?.$id) {
+      return response.documents[0].$id;
+    }
+    return '';
   } catch (error) {
     console.error(error);
     throw error;
@@ -81,4 +84,20 @@ export const subscribeToChatId = (chatId: string) => {
 };
 export const unSubscribeToChatId = () => {
   currentChatIdSubscription();
+};
+
+export const getOrCreateChatIdByIds = async (
+  userIdA: string,
+  userIdB: string
+): Promise<string> => {
+  const chatId = await getByUserIds(userIdA, userIdB);
+  if (chatId) {
+    console.log('Chat found');
+
+    return chatId;
+  } else {
+    const newChat = await create(userIdA, userIdB);
+    console.log('New chat created');
+    return newChat.$id;
+  }
 };
