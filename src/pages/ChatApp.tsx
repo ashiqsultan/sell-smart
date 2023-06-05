@@ -18,14 +18,19 @@ const ChatApp = () => {
   const [newMessage, setNewMessage] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
   const [channel, setChannel] = useState('');
+
+  const fetchMessages = useCallback(async () => {
+    try {
+      const newMsgs = await messageAPI.getByChatId(chatId);
+      setMessages(newMsgs);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [chatId]);
   const handleSend = async () => {
     if (chatId) {
       await messageAPI.create(chatId, newMessage);
       setNewMessage('');
-      // TEMP
-      // Get updated msg array
-      const newMessagesArr = await messageAPI.getByChatId(chatId);
-      setMessages(newMessagesArr);
     }
   };
   const handleKeyDown = async (e) => {
@@ -37,6 +42,7 @@ const ChatApp = () => {
   const chatIdSub = useCallback(() => {
     subscription = client().subscribe([channel], (response) => {
       console.log(response);
+      fetchMessages();
     });
   }, [channel]);
 
@@ -46,14 +52,6 @@ const ChatApp = () => {
 
   useEffect(() => {
     if (chatId) {
-      const fetchMessages = async () => {
-        try {
-          const newMsgs = await messageAPI.getByChatId(chatId);
-          setMessages(newMsgs);
-        } catch (error) {
-          console.error(error);
-        }
-      };
       const fetchUserInfo = async () => {
         try {
           const currentUser = await getInfo();
