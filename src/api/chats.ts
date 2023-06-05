@@ -80,21 +80,6 @@ export const updateLastMsgId = async (chatId: string, lastMsgId: string) => {
   }
 };
 
-export const subscribeToChatId = (chatId: string) => {
-  //  TODO
-  //  Call unSubscribeToChatId before creating new one
-  const channel = `databases.[${databaseId}].collections.[${collectionId}].documents.[${chatId}]`;
-  currentChatIdSubscription = client().subscribe([channel], (response) => {
-    console.log(`${channel} response`);
-    console.log(response);
-  });
-  console.log('typeof currentChatIdSubscription');
-  console.log(typeof currentChatIdSubscription);
-};
-export const unSubscribeToChatId = () => {
-  currentChatIdSubscription();
-};
-
 export const getOrCreateChatIdByIds = async (
   userIdA: string,
   userIdB: string

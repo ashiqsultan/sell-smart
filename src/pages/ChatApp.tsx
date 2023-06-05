@@ -1,18 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TextField, Button, Grid, Box } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useParams } from 'react-router-dom';
 import * as messageAPI from '../api/messages';
 import { IMessageDoc } from '../api/messages';
 import { getInfo } from '../api/account';
+import client from '../api/client';
+import config from '../config';
+
+const databaseId = config.database_id;
+const collectionId = config.collectionIds.chats;
+let subscription: any;
 
 const ChatApp = () => {
+  const { chatId } = useParams();
   const [messages, setMessages] = useState<IMessageDoc[] | null>(null);
   const [newMessage, setNewMessage] = useState('');
-  const { chatId } = useParams();
   const [currentUserId, setCurrentUserId] = useState('');
+  const [channel, setChannel] = useState('');
   const handleSend = async () => {
-    console.log('Sending message:', newMessage);
     if (chatId) {
       await messageAPI.create(chatId, newMessage);
       setNewMessage('');
@@ -22,27 +28,56 @@ const ChatApp = () => {
       setMessages(newMessagesArr);
     }
   };
+  const handleKeyDown = async (e) => {
+    if (e.key === 'Enter') {
+      await handleSend();
+    }
+  };
+
+  const chatIdSub = useCallback(() => {
+    subscription = client().subscribe([channel], (response) => {
+      console.log(response);
+    });
+  }, [channel]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const newMsgs = await messageAPI.getByChatId(chatId);
-        setMessages(newMsgs);
-      } catch (error) {
-        console.error(error);
+    chatIdSub();
+  }, [channel]);
+
+  useEffect(() => {
+    if (chatId) {
+      const fetchMessages = async () => {
+        try {
+          const newMsgs = await messageAPI.getByChatId(chatId);
+          setMessages(newMsgs);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      const fetchUserInfo = async () => {
+        try {
+          const currentUser = await getInfo();
+          setCurrentUserId(currentUser.$id);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchMessages();
+      fetchUserInfo();
+      setChannel(
+        `databases.${databaseId}.collections.${collectionId}.documents.${chatId}`
+      );
+    }
+    return () => {
+      if (subscription) {
+        subscription();
       }
     };
-    const fetchUserInfo = async () => {
-      try {
-        const currentUser = await getInfo();
-        setCurrentUserId(currentUser.$id);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchMessages();
-    fetchUserInfo();
   }, []);
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
 
   return (
     <Box
@@ -89,6 +124,7 @@ const ChatApp = () => {
             placeholder='Type a message'
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </Grid>
         <Grid item xs={2}>

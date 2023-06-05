@@ -22,7 +22,11 @@ export const getByChatId = async (chatId: string): Promise<IMessageDoc[]> => {
     const response = await database.listDocuments<IMessageDoc>(
       databaseId,
       collectionId,
-      [Query.equal('chat_id', [chatId]), Query.orderAsc('$createdAt')]
+      [
+        Query.equal('chat_id', [chatId]),
+        Query.orderAsc('$createdAt'),
+        Query.limit(100),
+      ]
     );
     return response.documents;
   } catch (error) {
