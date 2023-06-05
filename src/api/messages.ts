@@ -2,7 +2,7 @@ import { Databases, ID, Models, Query } from 'appwrite';
 import config from '../config';
 import client from './client';
 import { getInfo } from './account';
-import { updateLastMsgId } from './chats';
+import * as chatAPI from './chats';
 
 export interface IMessage {
   chat_id: string;
@@ -22,7 +22,7 @@ export const getByChatId = async (chatId: string): Promise<IMessageDoc[]> => {
     const response = await database.listDocuments<IMessageDoc>(
       databaseId,
       collectionId,
-      [Query.equal('chat_id', [chatId]), Query.orderDesc('$createdAt')]
+      [Query.equal('chat_id', [chatId]), Query.orderAsc('$createdAt')]
     );
     return response.documents;
   } catch (error) {
@@ -33,12 +33,15 @@ export const getByChatId = async (chatId: string): Promise<IMessageDoc[]> => {
 
 export const create = async (
   chat_id: string,
-  receiver_id: string,
   content: string
 ): Promise<IMessageDoc> => {
   try {
     const user = await getInfo();
     const sender_id = user.$id;
+    const chat = await chatAPI.getById(chat_id);
+    const user1Id = chat.user1_id;
+    const user2Id = chat.user2_id;
+    const receiver_id = sender_id === user1Id ? user2Id : user1Id;
     const data: IMessage = {
       chat_id,
       sender_id,
@@ -51,7 +54,7 @@ export const create = async (
       ID.unique(),
       data
     );
-    await updateLastMsgId(chat_id, response.$id);
+    await chatAPI.updateLastMsgId(chat_id, response.$id);
     return response;
   } catch (error) {
     console.error(error);

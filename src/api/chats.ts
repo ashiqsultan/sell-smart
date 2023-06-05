@@ -15,6 +15,15 @@ const collectionId = config.collectionIds.chats;
 
 let currentChatIdSubscription: any;
 
+export const getById = async (chatId: string): Promise<IChatDoc> => {
+  const chat = await database.listDocuments<IChatDoc>(
+    databaseId,
+    collectionId,
+    [Query.equal('$id', [chatId])]
+  );
+  return chat.documents[0];
+};
+
 export const getByUserIds = async (
   userIdA: string,
   userIdB: string
