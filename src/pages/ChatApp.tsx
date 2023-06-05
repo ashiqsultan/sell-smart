@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { TextField, Button, Grid, Box } from '@mui/material';
+import { TextField, Button, Grid, Box, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useParams } from 'react-router-dom';
 import * as messageAPI from '../api/messages';
@@ -81,14 +81,15 @@ const ChatApp = () => {
 
   return (
     <Box
-      display={'flex'}
-      flexDirection={'column'}
-      justifyContent={'flex-end'}
-      height={'calc(100vh - 100px)'}
+      display='flex'
+      flexDirection='column'
+      justifyContent='flex-end'
+      height='calc(100vh - 100px)'
     >
       {/* Messages */}
-      {Array.isArray(messages) && messages.length > 0
-        ? messages.map((message, index) => (
+      <Box overflow='auto'>
+        {Array.isArray(messages) && messages.length > 0 ? (
+          messages.map((message, index) => (
             <Grid
               key={index}
               container
@@ -115,7 +116,13 @@ const ChatApp = () => {
               </Grid>
             </Grid>
           ))
-        : null}
+        ) : (
+          <div>
+            <Typography>No messages</Typography>
+          </div>
+        )}
+      </Box>
+
       {/* Input field and send button */}
       <Grid container alignItems='center'>
         <Grid item xs={10}>
