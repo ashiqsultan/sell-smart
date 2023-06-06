@@ -1,15 +1,5 @@
-import { CSSProperties, useState } from 'react';
-import {
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Typography,
-  Snackbar,
-  Alert,
-} from '@mui/material';
+import { CSSProperties, useContext, useEffect, useState } from 'react';
+import { TextField, Button, Typography, Snackbar, Alert } from '@mui/material';
 import FileUpload from './FileUpload';
 
 import { create } from '../api/posts';
@@ -17,17 +7,18 @@ import Category from './Selectors/Category';
 import StateSelector from './Selectors/StateSelector';
 import CitySelector from './Selectors/CitySelector';
 import { upload } from '../api/postImages';
+import { AppContext } from '../context/AppContext';
 
 const styles: Record<string, CSSProperties> = {
   formContainer: { marginTop: '1rem', padding: '0 1rem' },
   formItem: { marginBottom: '1rem' },
 };
 const CreatePostForm = () => {
-  const [category, setCategory] = useState('');
+  const { state, dispatch } = useContext(AppContext);
+  const { categoryId, stateId, cityId } = state;
+
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
-  const [state, setState] = useState('');
-  const [city, setCity] = useState('');
   const [description, setDescription] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -40,11 +31,11 @@ const CreatePostForm = () => {
   const validateFields = (): boolean => {
     // Check for empty strings or NaN number values
     if (
-      !category ||
+      !categoryId ||
       !title ||
       isNaN(parseInt(price)) ||
-      !state ||
-      !city ||
+      !stateId ||
+      !cityId ||
       !description
     ) {
       console.error('Fields are not valid');
@@ -55,13 +46,13 @@ const CreatePostForm = () => {
 
   const resetForm = (): void => {
     // Reset the states to their initial values
-    setCategory('');
     setTitle('');
     setPrice('');
-    setState('');
-    setCity('');
     setDescription('');
     setUploadedFiles([]);
+    dispatch({ type: 'SET_CATEGORY_ID', payload: '' });
+    dispatch({ type: 'SET_STATE_ID', payload: '' });
+    dispatch({ type: 'SET_CITY_ID', payload: '' });
   };
 
   const showSnackbar = (message: string, severity: 'success' | 'error') => {
@@ -96,11 +87,11 @@ const CreatePostForm = () => {
           uploadedFileIds = await uploadFiles(uploadedFiles);
         }
         const result = await create(
-          category,
+          categoryId,
           title,
           parseInt(price),
-          state,
-          city,
+          stateId,
+          cityId,
           description,
           uploadedFileIds
         );
@@ -116,17 +107,11 @@ const CreatePostForm = () => {
     }
   };
 
-  const handleCategoryChange = (categoryId: string) => {
-    setCategory(categoryId);
-  };
-  const handleStateChange = (stateId: string) => {
-    setState(stateId);
-    setCity(''); // Reset selected city when the state changes
-  };
-
-  const handleCityChange = (cityId: string) => {
-    setCity(cityId);
-  };
+  useEffect(() => {
+    dispatch({ type: 'SET_CATEGORY_ID', payload: '' });
+    dispatch({ type: 'SET_STATE_ID', payload: '' });
+    dispatch({ type: 'SET_CITY_ID', payload: '' });
+  }, []);
 
   return (
     <div style={styles.formContainer}>
@@ -151,7 +136,7 @@ const CreatePostForm = () => {
       </Typography>
       {/* Form items */}
       <div style={styles.formItem}>
-        <Category onChange={handleCategoryChange} />
+        <Category />
       </div>
       <TextField
         label='Title'
@@ -169,10 +154,10 @@ const CreatePostForm = () => {
         style={styles.formItem}
       />
       <div style={styles.formItem}>
-        <StateSelector onChange={handleStateChange} />
+        <StateSelector />
       </div>
       <div style={styles.formItem}>
-        <CitySelector stateId={state} onChange={handleCityChange} />
+        <CitySelector stateId={state} />
       </div>
       <TextField
         label='Description'
