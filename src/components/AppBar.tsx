@@ -4,13 +4,21 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/material';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { logout } from '../api/account';
+import { getInfo, logout } from '../api/account';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import LogoutIcon from '@mui/icons-material/Logout';
+
+import { getById } from '../api/userDetails';
 
 export default function MainAppBar() {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
+  const [userName, setUserName] = useState<string | null>(null);
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -19,11 +27,22 @@ export default function MainAppBar() {
   const handleCreateAccountClick = () => {
     navigate('/signup');
   };
-
+  const handleSellClick = () => {
+    navigate('/create-post');
+  };
   const handleLogoutClick = async () => {
     await logout();
     dispatch({ type: 'SET_LOGGED_IN', payload: false });
   };
+
+  useEffect(() => {
+    const updateUserName = async () => {
+      const user = await getInfo();
+      const usetDetails = await getById(user.$id);
+      setUserName(usetDetails.name);
+    };
+    updateUserName();
+  }, [state.isLoggedIn]);
 
   return (
     <>
@@ -76,13 +95,25 @@ export default function MainAppBar() {
                   </Button>
                 </>
               ) : (
-                <Button
-                  variant='outlined'
-                  color='inherit'
-                  onClick={handleLogoutClick}
-                >
-                  Logout
-                </Button>
+                <>
+                  {userName && (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Avatar sx={{ mr: 1 }}>{userName[0]}</Avatar>
+                      <Typography variant='body1'>{userName}</Typography>
+                    </div>
+                  )}
+                  <Button
+                    variant='contained'
+                    color='secondary'
+                    endIcon={<AddIcon />}
+                    onClick={handleSellClick}
+                  >
+                    Sell
+                  </Button>
+                  <IconButton color='inherit' onClick={handleLogoutClick}>
+                    <LogoutIcon />
+                  </IconButton>
+                </>
               )}
             </Box>
           </div>
