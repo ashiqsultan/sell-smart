@@ -16,7 +16,7 @@ import ModalProgress from './ModalProgress';
 import { getOrCreateChatIdByIds } from '../api/chats';
 import { getInfo } from '../api/account';
 
-const UserDetailsCard: React.FC = ({ userId }) => {
+const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
   const [userDetails, setUserDetails] = useState<IUserDetailsDoc | null>(null);
   const navigate = useNavigate();
 
@@ -61,7 +61,7 @@ const UserDetailsCard: React.FC = ({ userId }) => {
     }
   };
   return (
-    <Box px={5}>
+    <Box>
       <Card>
         {/* <CardHeader title={name} /> */}
         <CardContent>
