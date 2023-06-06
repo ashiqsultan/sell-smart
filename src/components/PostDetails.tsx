@@ -6,15 +6,23 @@ import PostImageViewer from './PostImageViewer';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import RoomIcon from '@mui/icons-material/Room';
+import * as stateAPI from '../api/states';
+import * as cityAPI from '../api/cities';
 
 const PostDetails: React.FC = () => {
   const { postId } = useParams();
   const [post, setPost] = useState<IPost | null>(null);
+  const [stateLocation, setStateLocation] = useState('');
+  const [city, setCity] = useState('');
 
   useEffect(() => {
     const fetchPostDetails = async () => {
       try {
         const postDetails = await getById(postId || '');
+        const stateDetails = await stateAPI.getById(postDetails.state_id);
+        const cityDetails = await cityAPI.getById(postDetails.city_id);
+        setStateLocation(stateDetails.name);
+        setCity(cityDetails.name);
         setPost(postDetails);
       } catch (error) {
         console.error(error);
@@ -83,7 +91,7 @@ const PostDetails: React.FC = () => {
                 <LocationCityIcon />
               </Grid>
               <Grid item>
-                <Typography variant='subtitle1'>{state_id}</Typography>
+                <Typography variant='subtitle1'>{stateLocation}</Typography>
               </Grid>
             </Grid>
             <Grid container alignItems='center' spacing={1}>
@@ -91,7 +99,7 @@ const PostDetails: React.FC = () => {
                 <RoomIcon />
               </Grid>
               <Grid item>
-                <Typography variant='subtitle1'>{city_id}</Typography>
+                <Typography variant='subtitle1'>{city}</Typography>
               </Grid>
             </Grid>
           </Grid>
