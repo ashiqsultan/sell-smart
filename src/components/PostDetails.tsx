@@ -61,9 +61,9 @@ const PostDetails: React.FC = () => {
           <Grid item xs={12}>
             <Typography variant='h4'>{title}</Typography>
             <Typography>
-              <span style={{ fontSize: '18px' }}>₹</span>{' '}
+              <span style={{ fontSize: '22px' }}>₹</span>{' '}
               <span
-                style={{ color: 'green', fontSize: '20px', fontWeight: 'bold' }}
+                style={{ color: 'green', fontSize: '28px', fontWeight: 'bold' }}
               >
                 {price}
               </span>
@@ -75,7 +75,7 @@ const PostDetails: React.FC = () => {
                 <AccountCircleIcon />
               </Grid>
               <Grid item>
-                <Typography>{user_id}</Typography>
+                <Typography variant='subtitle1'>{user_id}</Typography>
               </Grid>
             </Grid>
             <Grid container alignItems='center' spacing={1}>
@@ -83,7 +83,7 @@ const PostDetails: React.FC = () => {
                 <LocationCityIcon />
               </Grid>
               <Grid item>
-                <Typography>{state_id}</Typography>
+                <Typography variant='subtitle1'>{state_id}</Typography>
               </Grid>
             </Grid>
             <Grid container alignItems='center' spacing={1}>
@@ -91,7 +91,7 @@ const PostDetails: React.FC = () => {
                 <RoomIcon />
               </Grid>
               <Grid item>
-                <Typography>{city_id}</Typography>
+                <Typography variant='subtitle1'>{city_id}</Typography>
               </Grid>
             </Grid>
           </Grid>
