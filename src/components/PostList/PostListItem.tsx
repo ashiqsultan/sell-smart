@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, CardMedia, Grid } from '@mui/material';
 import { getFileById } from '../../api/postImages';
-import { IPost } from '../../api/posts';
+import { IPostDoc } from '../../api/posts';
+import { useNavigate } from 'react-router-dom';
 
 interface PostListItemProps {
-  post: IPost;
+  post: IPostDoc;
 }
 
 const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
   const [imageURL, setImageURL] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -25,8 +27,21 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
     fetchImage();
   }, [post.image_ids]);
 
+  const handleCardClick = () => {
+    navigate(`/post/${post.$id}`);
+  };
+
   return (
-    <Card sx={{ mb: 2, width: '100%' }}>
+    <Card
+      sx={{
+        mb: 2,
+        width: '100%',
+        '&:hover': {
+          cursor: 'pointer',
+        },
+      }}
+      onClick={handleCardClick}
+    >
       <Grid container spacing={2}>
         <Grid item xs={3}>
           {imageURL && (
@@ -45,6 +60,13 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
             </Typography>
             <Typography variant='h6' color='#93b592' fontWeight='bold'>
               ₹{post.price}
+            </Typography>
+            <Typography variant='body2' color='grey' fontWeight='light'>
+              {new Date(post.$createdAt).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
             </Typography>
           </CardContent>
         </Grid>
