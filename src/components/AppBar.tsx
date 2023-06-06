@@ -9,9 +9,9 @@ import { AppContext } from '../context/AppContext';
 import { getInfo, logout } from '../api/account';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
+import StoreIcon from '@mui/icons-material/Store';
 
 import { getById } from '../api/userDetails';
 
@@ -56,7 +56,8 @@ export default function MainAppBar() {
               width: '100%',
             }}
           >
-            <div>
+            <Box display={'flex'} alignItems={'center'}>
+              <StoreIcon sx={{ mr: 1 }} />
               <Typography
                 variant='h6'
                 onClick={() => {
@@ -68,7 +69,7 @@ export default function MainAppBar() {
               >
                 Sell Smart
               </Typography>
-            </div>
+            </Box>
             <Box display={'flex'} columnGap={'2rem'}>
               {!state.isLoggedIn ? (
                 <>
