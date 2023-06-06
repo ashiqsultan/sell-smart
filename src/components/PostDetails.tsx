@@ -43,46 +43,45 @@ const PostDetails: React.FC = () => {
       </Typography>
 
       <Divider />
-
-      <Grid container spacing={2} mt={3}>
-        <Grid item xs={6}>
-          <Typography variant='subtitle1'>User ID:</Typography>
-          <Typography>{user_id}</Typography>
-        </Grid>
-
-        <Grid item xs={6}>
-          <Typography variant='subtitle1'>Category ID:</Typography>
-          <Typography>{category_id}</Typography>
-        </Grid>
-
-        <Grid item xs={6}>
-          <Typography variant='subtitle1'>Title:</Typography>
-          <Typography>{title}</Typography>
-        </Grid>
-
-        <Grid item xs={6}>
-          <Typography variant='subtitle1'>Price:</Typography>
-          <Typography>{price}</Typography>
-        </Grid>
-
-        <Grid item xs={6}>
-          <Typography variant='subtitle1'>State ID:</Typography>
-          <Typography>{state_id}</Typography>
-        </Grid>
-
-        <Grid item xs={6}>
-          <Typography variant='subtitle1'>City ID:</Typography>
-          <Typography>{city_id}</Typography>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography variant='subtitle1'>Description:</Typography>
-          <Typography>{description}</Typography>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography variant='subtitle1'>Image IDs:</Typography>
+      <Grid container spacing={4} mt={3} wrap='wrap'>
+        <Grid item xs={12} sm={6}>
           <PostImageViewer imageIds={image_ids || []} />
+        </Grid>
+        <Grid item xs={12} sm={6} container spacing={2} mt={3}>
+          <Grid item xs={6}>
+            <Typography variant='subtitle1'>User ID:</Typography>
+            <Typography>{user_id}</Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant='subtitle1'>Category ID:</Typography>
+            <Typography>{category_id}</Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant='subtitle1'>Title:</Typography>
+            <Typography>{title}</Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant='subtitle1'>Price:</Typography>
+            <Typography>{price}</Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant='subtitle1'>State ID:</Typography>
+            <Typography>{state_id}</Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant='subtitle1'>City ID:</Typography>
+            <Typography>{city_id}</Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Typography variant='subtitle1'>Description:</Typography>
+            <Typography>{description}</Typography>
+          </Grid>
         </Grid>
       </Grid>
     </Box>
