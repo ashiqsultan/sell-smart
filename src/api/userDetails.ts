@@ -52,3 +52,22 @@ export const getById = async (userId: string): Promise<IUserDetailsDoc> => {
     throw error;
   }
 };
+export const updateUserDetails = async (
+  id: string,
+  data: any
+): Promise<IUserDetailsDoc> => {
+  try {
+    const doc = await database.updateDocument<IUserDetailsDoc>(
+      databaseId,
+      collectionId,
+      id,
+      data
+    );
+    return doc;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+updateUserDetails;

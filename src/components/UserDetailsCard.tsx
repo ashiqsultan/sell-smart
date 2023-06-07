@@ -9,28 +9,38 @@ import {
   CardContent,
   Button,
   CardActions,
+  Modal,
+  TextField,
+  IconButton,
 } from '@mui/material';
 import { AccountCircle, Phone, Today, Chat } from '@mui/icons-material';
-import { getById, IUserDetailsDoc } from '../api/userDetails';
+import {
+  getById,
+  IUserDetailsDoc,
+  updateUserDetails,
+} from '../api/userDetails';
 import ModalProgress from './ModalProgress';
 import { getOrCreateChatIdByIds } from '../api/chats';
 import { getInfo } from '../api/account';
+import { Edit } from '@mui/icons-material';
 
 const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
   const [userDetails, setUserDetails] = useState<IUserDetailsDoc | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [updatedName, setUpdatedName] = useState('');
+  const [updatedBio, setUpdatedBio] = useState('');
+
   const navigate = useNavigate();
 
+  const fetchUserDetails = async () => {
+    try {
+      const user = await getById(userId || '');
+      setUserDetails(user);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const user = await getById(userId || '');
-        setUserDetails(user);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    console.log({ userId });
-
     fetchUserDetails();
   }, []);
 
@@ -57,6 +67,34 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
       console.error(error);
     }
   };
+
+  const handleEditOpen = () => {
+    setIsEditOpen(true);
+    setUpdatedName(name);
+    setUpdatedBio(bio);
+  };
+
+  const handleEditClose = () => {
+    setIsEditOpen(false);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      // Call API to update user details with updatedName and updatedBio
+      const updatedData = await updateUserDetails(userId, {
+        name: updatedName,
+        bio: updatedBio,
+      });
+      console.log({ updatedData });
+
+      // Close the modal and fetch updated user details
+      setIsEditOpen(false);
+      await fetchUserDetails();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Box>
       <Card>
@@ -65,7 +103,12 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
             <Avatar sx={{ mr: 2 }}>
               <AccountCircle />
             </Avatar>
-            <Typography variant='h6'>{name}</Typography>
+            <Typography variant='h6'>
+              {name}
+              <IconButton color='primary' onClick={handleEditOpen}>
+                <Edit />
+              </IconButton>
+            </Typography>
           </Box>
           <Box mt={4}>
             <Grid container spacing={2} alignItems='center'>
@@ -117,6 +160,51 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
           </Button>
         </CardActions>
       </Card>
+
+      {/* Edit Modal */}
+      <Modal open={isEditOpen} onClose={handleEditClose}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            width: '80%',
+            maxWidth: 400,
+          }}
+        >
+          <Typography variant='h6' align='center' mb={1}>
+            Update User Details
+          </Typography>
+          <TextField
+            label='Name'
+            value={updatedName}
+            onChange={(e) => setUpdatedName(e.target.value)}
+            fullWidth
+            sx={{ marginBlock: '1rem' }}
+          />
+          <TextField
+            label='Bio'
+            value={updatedBio}
+            onChange={(e) => setUpdatedBio(e.target.value)}
+            fullWidth
+            multiline
+            rows={4}
+            sx={{ marginBlock: '1rem' }}
+          />
+          <Box display='flex' justifyContent='flex-end' columnGap={2}>
+            <Button color='primary' onClick={handleEditClose}>
+              Cancel
+            </Button>
+            <Button variant='contained' color='primary' onClick={handleUpdate}>
+              Update
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };
