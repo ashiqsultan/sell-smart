@@ -17,7 +17,7 @@ const Login = () => {
       const password = data.get('password') as string;
       const isLoginRequest = await login(email, password);
       if (isLoginRequest.$id) {
-        dispatch({ type: 'SET_USER_ID', payload: isLoginRequest.$id });
+        dispatch({ type: 'SET_USER_ID', payload: isLoginRequest.userId });
         navigate('/');
       }
     } catch (error) {
