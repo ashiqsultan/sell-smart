@@ -43,9 +43,6 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
     window.location.href = `tel:${phone_number}`;
   };
   const handleStartChat = async () => {
-    // TODO
-    // Get chat by user ids
-    // One is session user id and another is the this param userId
     try {
       const sessionUser = await getInfo();
       if (sessionUser.$id && userId) {
@@ -63,7 +60,6 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
   return (
     <Box>
       <Card>
-        {/* <CardHeader title={name} /> */}
         <CardContent>
           <Box display='flex' alignItems='center' mt={2}>
             <Avatar sx={{ mr: 2 }}>
