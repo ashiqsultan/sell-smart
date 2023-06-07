@@ -26,6 +26,7 @@ import { Edit } from '@mui/icons-material';
 
 const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
   const [userDetails, setUserDetails] = useState<IUserDetailsDoc | null>(null);
+  const [isSessionUser, setIsSessionUser] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [updatedName, setUpdatedName] = useState('');
   const [updatedBio, setUpdatedBio] = useState('');
@@ -42,7 +43,12 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
     }
   };
   useEffect(() => {
+    const fetchSessionUser = async () => {
+      const sessionUserInfo = await getInfo();
+      setIsSessionUser(sessionUserInfo.$id === userId);
+    };
     fetchUserDetails();
+    fetchSessionUser();
   }, []);
 
   if (!userDetails) {
@@ -86,6 +92,7 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
       await updateUserDetails(userId, {
         name: updatedName,
         bio: updatedBio,
+        phone_number: updatedPhoneNumber,
       });
       // Close the modal and fetch updated user details
       setIsEditOpen(false);
@@ -105,15 +112,27 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
             </Avatar>
             <Typography variant='h6'>
               {name}
-              <IconButton color='primary' onClick={handleEditOpen}>
-                <Edit />
-              </IconButton>
+              {isSessionUser && (
+                <IconButton color='primary' onClick={handleEditOpen}>
+                  <Edit />
+                </IconButton>
+              )}
             </Typography>
           </Box>
-          <Box mt={4}>
-            <Grid container spacing={2} alignItems='center'>
+          <Box mt={3}>
+            {isSessionUser && (
+              <Grid container spacing={2} alignItems='center' my={1}>
+                <Grid item>
+                  <Phone color='info' />
+                </Grid>
+                <Grid item>
+                  <Typography variant='body1'>{phone_number}</Typography>
+                </Grid>
+              </Grid>
+            )}
+            <Grid container spacing={2} alignItems='center' my={1}>
               <Grid item>
-                <Today />
+                <Today color='action' />
               </Grid>
               <Grid item>
                 <Typography variant='body1'>
@@ -136,29 +155,31 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
             </Grid>
           </Box>
         </CardContent>
-        <CardActions
-          sx={{
-            marginLeft: '5px',
-            display: 'flex',
-            justifyContent: 'flex-start',
-            columnGap: '1rem',
-          }}
-        >
-          <Button
-            color='primary'
-            startIcon={<Chat />}
-            onClick={handleStartChat}
+        {!isSessionUser && (
+          <CardActions
+            sx={{
+              marginLeft: '5px',
+              display: 'flex',
+              justifyContent: 'flex-start',
+              columnGap: '1rem',
+            }}
           >
-            Chat
-          </Button>
-          <Button
-            color='primary'
-            startIcon={<Phone />}
-            onClick={handlePhoneCall}
-          >
-            Call
-          </Button>
-        </CardActions>
+            <Button
+              color='primary'
+              startIcon={<Chat />}
+              onClick={handleStartChat}
+            >
+              Chat
+            </Button>
+            <Button
+              color='primary'
+              startIcon={<Phone />}
+              onClick={handlePhoneCall}
+            >
+              Call
+            </Button>
+          </CardActions>
+        )}
       </Card>
 
       {/* Edit Modal */}
