@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { getInfo } from '../api/account';
 import { IPostDoc, getByUserId } from '../api/posts';
 import PostListItem from './PostList/PostListItem';
 
@@ -9,10 +8,6 @@ const UserPosts = ({ userId }) => {
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
-        // Get user details
-        const userDetails = await getInfo();
-        // Get userId from userinfo
-        const userId = userDetails.$id;
         // Get all posts of the user
         const posts = await getByUserId(userId);
         setUserPosts(posts);
@@ -22,7 +17,7 @@ const UserPosts = ({ userId }) => {
     };
 
     fetchUserPosts();
-  }, []);
+  }, [userId]);
 
   return (
     <>

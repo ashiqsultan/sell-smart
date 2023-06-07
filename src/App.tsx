@@ -10,7 +10,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import UserDetails from './pages/UserDetails';
 import ChatApp from './pages/ChatApp';
-import UserPosts from './components/UserPosts';
+import UserPosts from './pages/UserPosts';
 
 const theme = createTheme({
   palette: {
