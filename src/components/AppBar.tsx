@@ -37,8 +37,9 @@ export default function MainAppBar() {
 
   useEffect(() => {
     const updateUserName = async () => {
-      const usetDetails = await getById(state.userId);
-      setUserName(usetDetails.name);
+      const user = await getInfo();
+      const userDetails = await getById(user.$id);
+      setUserName(userDetails.name);
     };
     updateUserName();
   }, [state.userId]);
