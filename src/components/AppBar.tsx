@@ -19,6 +19,7 @@ export default function MainAppBar() {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>('');
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -39,10 +40,15 @@ export default function MainAppBar() {
     const updateUserName = async () => {
       const user = await getInfo();
       const usetDetails = await getById(user.$id);
+      setUserId(user.$id);
       setUserName(usetDetails.name);
     };
     updateUserName();
   }, [state.isLoggedIn]);
+
+  const onProfileClick = () => {
+    navigate(`/user/${userId}`);
+  };
 
   return (
     <>
@@ -98,7 +104,14 @@ export default function MainAppBar() {
               ) : (
                 <>
                   {userName && (
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                      }}
+                      onClick={onProfileClick}
+                    >
                       <Avatar sx={{ mr: 1 }}>{userName[0]}</Avatar>
                       <Typography variant='body1'>{userName}</Typography>
                     </div>
