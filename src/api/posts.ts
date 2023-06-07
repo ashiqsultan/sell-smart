@@ -27,8 +27,19 @@ export const getAll = async (): Promise<IPostDoc[]> => {
       collectionId,
       [Query.orderDesc('$createdAt')]
     );
-    console.log(response.documents);
-
+    return response.documents;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const getByUserId = async (user_id: string): Promise<IPostDoc[]> => {
+  try {
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('user_id', [user_id])]
+    );
     return response.documents;
   } catch (error) {
     console.error(error);
