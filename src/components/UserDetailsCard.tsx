@@ -101,12 +101,20 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
       console.error(error);
     }
   };
-
+  const onProfileClick = () => {
+    navigate(`/user/${userId}`);
+  };
   return (
     <Box>
       <Card>
         <CardContent>
-          <Box display='flex' alignItems='center' mt={2}>
+          <Box
+            display='flex'
+            alignItems='center'
+            mt={2}
+            onClick={onProfileClick}
+            sx={{ cursor: 'pointer' }}
+          >
             <Avatar sx={{ mr: 2 }}>
               <AccountCircle />
             </Avatar>
