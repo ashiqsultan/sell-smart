@@ -17,7 +17,7 @@ const Login = () => {
       const password = data.get('password') as string;
       const isLoginRequest = await login(email, password);
       if (isLoginRequest.$id) {
-        dispatch({ type: 'SET_LOGGED_IN', payload: true });
+        dispatch({ type: 'SET_USER_ID', payload: isLoginRequest.$id });
         navigate('/');
       }
     } catch (error) {
@@ -27,10 +27,10 @@ const Login = () => {
 
   useEffect(() => {
     // Redirect if already logged in
-    if (state.isLoggedIn) {
+    if (state.userId) {
       navigate('/');
     }
-  }, [state.isLoggedIn]);
+  }, [state.userId]);
 
   return (
     <Box component='form' onSubmit={handleSubmit} noValidate>

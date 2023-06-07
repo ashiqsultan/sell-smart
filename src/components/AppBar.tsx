@@ -19,7 +19,6 @@ export default function MainAppBar() {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
   const [userName, setUserName] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>('');
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -33,21 +32,21 @@ export default function MainAppBar() {
   };
   const handleLogoutClick = async () => {
     await logout();
-    dispatch({ type: 'SET_LOGGED_IN', payload: false });
+    dispatch({ type: 'SET_USER_ID', payload: '' });
   };
 
   useEffect(() => {
     const updateUserName = async () => {
-      const user = await getInfo();
-      const usetDetails = await getById(user.$id);
-      setUserId(user.$id);
+      const usetDetails = await getById(state.userId);
       setUserName(usetDetails.name);
     };
     updateUserName();
-  }, [state.isLoggedIn]);
+  }, [state.userId]);
 
   const onProfileClick = () => {
-    navigate(`/user/${userId}`);
+    if (state.userId) {
+      navigate(`/user/${state.userId}`);
+    }
   };
 
   return (
@@ -77,7 +76,7 @@ export default function MainAppBar() {
               </Typography>
             </Box>
             <Box display={'flex'} columnGap={'2rem'}>
-              {!state.isLoggedIn ? (
+              {!state.userId ? (
                 <>
                   <Button
                     variant='outlined'

@@ -16,7 +16,7 @@ export interface IAppState {
   categoryId: string;
   minPrice: number | null;
   maxPrice: number | null;
-  isLoggedIn: boolean;
+  userId: string;
 }
 
 type Action =
@@ -29,7 +29,7 @@ type Action =
   | { type: 'SET_CATEGORY_ID'; payload: string }
   | { type: 'SET_MIN_PRICE'; payload: number }
   | { type: 'SET_MAX_PRICE'; payload: number }
-  | { type: 'SET_LOGGED_IN'; payload: boolean };
+  | { type: 'SET_USER_ID'; payload: string };
 
 const initialState: IAppState = {
   keyword: '',
@@ -41,7 +41,7 @@ const initialState: IAppState = {
   categoryId: '',
   minPrice: null,
   maxPrice: null,
-  isLoggedIn: false,
+  userId: '',
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
@@ -64,8 +64,8 @@ const reducer = (state: IAppState, action: Action): IAppState => {
       return { ...state, minPrice: action.payload };
     case 'SET_MAX_PRICE':
       return { ...state, maxPrice: action.payload };
-    case 'SET_LOGGED_IN':
-      return { ...state, isLoggedIn: action.payload };
+    case 'SET_USER_ID':
+      return { ...state, userId: action.payload };
     default:
       return state;
   }
@@ -85,7 +85,7 @@ export const AppContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categories: ICategory[] = await categoriesAPI.getAll(); // Replace with your actual API call
+        const categories: ICategory[] = await categoriesAPI.getAll();
         dispatch({ type: 'SET_CATEGORIES', payload: categories });
       } catch (error) {
         console.error(error);
@@ -95,10 +95,10 @@ export const AppContextProvider: React.FC = ({ children }) => {
       try {
         const info = await getInfo();
         if (info.$id) {
-          dispatch({ type: 'SET_LOGGED_IN', payload: true });
+          dispatch({ type: 'SET_USER_ID', payload: info.$id });
         }
       } catch (error) {
-        dispatch({ type: 'SET_LOGGED_IN', payload: false });
+        dispatch({ type: 'SET_USER_ID', payload: '' });
         console.error(error);
       }
     };
