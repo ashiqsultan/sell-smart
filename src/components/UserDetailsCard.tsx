@@ -29,6 +29,7 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [updatedName, setUpdatedName] = useState('');
   const [updatedBio, setUpdatedBio] = useState('');
+  const [updatedPhoneNumber, setUpdatedPhoneNumber] = useState('');
 
   const navigate = useNavigate();
 
@@ -72,6 +73,7 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
     setIsEditOpen(true);
     setUpdatedName(name);
     setUpdatedBio(bio);
+    setUpdatedPhoneNumber(phone_number);
   };
 
   const handleEditClose = () => {
@@ -81,12 +83,10 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
   const handleUpdate = async () => {
     try {
       // Call API to update user details with updatedName and updatedBio
-      const updatedData = await updateUserDetails(userId, {
+      await updateUserDetails(userId, {
         name: updatedName,
         bio: updatedBio,
       });
-      console.log({ updatedData });
-
       // Close the modal and fetch updated user details
       setIsEditOpen(false);
       await fetchUserDetails();
@@ -193,6 +193,13 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
             fullWidth
             multiline
             rows={4}
+            sx={{ marginBlock: '1rem' }}
+          />
+          <TextField
+            label='Phone Number'
+            value={updatedPhoneNumber}
+            onChange={(e) => setUpdatedPhoneNumber(e.target.value)}
+            fullWidth
             sx={{ marginBlock: '1rem' }}
           />
           <Box display='flex' justifyContent='flex-end' columnGap={2}>
