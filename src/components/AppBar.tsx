@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
 import StoreIcon from '@mui/icons-material/Store';
+import ChatIcon from '@mui/icons-material/Chat';
 
 import { getById } from '../api/userDetails';
 
@@ -115,6 +116,14 @@ export default function MainAppBar() {
                       <Typography variant='body1'>{userName}</Typography>
                     </div>
                   )}
+                  <IconButton
+                    color='inherit'
+                    onClick={() => {
+                      navigate('/chats');
+                    }}
+                  >
+                    <ChatIcon />
+                  </IconButton>
                   <Button
                     variant='contained'
                     color='secondary'
