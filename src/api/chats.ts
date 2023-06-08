@@ -1,6 +1,7 @@
 import { Databases, ID, Models, Query } from 'appwrite';
 import config from '../config';
 import client from './client';
+import * as userDetailsAPI from './userDetails';
 
 export interface IChat {
   user1_id: string;
@@ -8,6 +9,12 @@ export interface IChat {
   last_message_id?: string;
 }
 export interface IChatDoc extends IChat, Models.Document {}
+
+export interface IUserChats {
+  chatId: string;
+  receiverName: string;
+  updatedAt: string;
+}
 
 const database = new Databases(client());
 const databaseId = config.database_id;
@@ -94,16 +101,38 @@ export const getOrCreateChatIdByIds = async (
   }
 };
 
-export const getUserChats = async (userId: string): Promise<IChatDoc[]> => {
+export const getUserChats = async (userId: string): Promise<IUserChats[]> => {
   try {
-    const response = await database.listDocuments<IChatDoc>(
+    const user1Res = database.listDocuments<IChatDoc>(
       databaseId,
       collectionId,
       [Query.equal('user1_id', [userId])]
     );
-    console.log(response);
+    const user2Res = database.listDocuments<IChatDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('user2_id', [userId])]
+    );
+    const allRes = await Promise.all([user1Res, user2Res]);
 
-    return response.documents;
+    const chats = allRes.flatMap((res) => res.documents); // Flatten the array of chat documents
+
+    const receiverIds = chats.map((chat) =>
+      chat.user1_id === userId ? chat.user2_id : chat.user1_id
+    );
+
+    const userDetailsPromises = receiverIds.map((receiverId) =>
+      userDetailsAPI.getById(receiverId)
+    );
+    const receiverNames = await Promise.all(userDetailsPromises);
+
+    const chatsWithReceiverNames = chats.map((chat, index) => ({
+      chatId: chat.$id,
+      receiverId: receiverIds[index],
+      receiverName: receiverNames[index].name,
+      updatedAt: chat.$updatedAt,
+    }));
+    return chatsWithReceiverNames;
   } catch (error) {
     console.error(error);
     throw error;
