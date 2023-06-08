@@ -32,7 +32,8 @@ type Action =
   | { type: 'SET_MIN_PRICE'; payload: number }
   | { type: 'SET_MAX_PRICE'; payload: number }
   | { type: 'SET_USER_ID'; payload: string }
-  | { type: 'SET_OFFSET'; payload: number };
+  | { type: 'SET_OFFSET'; payload: number }
+  | { type: 'CLEAR_FILTERS' };
 
 const initialState: IAppState = {
   keyword: '',
@@ -73,6 +74,16 @@ const reducer = (state: IAppState, action: Action): IAppState => {
       return { ...state, userId: action.payload };
     case 'SET_OFFSET':
       return { ...state, offset: action.payload };
+    case 'CLEAR_FILTERS':
+      return {
+        ...state,
+        keyword: '',
+        stateId: '',
+        cityId: '',
+        categoryId: '',
+        minPrice: null,
+        maxPrice: null,
+      };
     default:
       return state;
   }
