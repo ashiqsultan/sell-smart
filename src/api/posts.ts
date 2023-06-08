@@ -108,6 +108,23 @@ export const getById = async (id: string): Promise<IPostDoc> => {
     throw error;
   }
 };
+export const updatePost = async (
+  id: string,
+  data: any
+): Promise<IPostDoc> => {
+  try {
+    const doc = await database.updateDocument<IPostDoc>(
+      databaseId,
+      collectionId,
+      id,
+      data
+    );
+    return doc;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const apiFilters = async (
   keyword: string,

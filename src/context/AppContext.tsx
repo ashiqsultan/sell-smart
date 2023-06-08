@@ -149,7 +149,6 @@ export const AppContextProvider: React.FC = ({ children }) => {
       try {
         const cities = await getByStateId(state.stateId);
         dispatch({ type: 'SET_CITIES', payload: cities });
-        dispatch({ type: 'SET_CITY_ID', payload: '' });
       } catch (error) {
         console.error(error);
       }
@@ -157,6 +156,12 @@ export const AppContextProvider: React.FC = ({ children }) => {
 
     fetchCities();
   }, [state.stateId]);
+
+  useEffect(() => {
+    if (state.cities.filter((i) => i.$id === state.cityId).length === 0) {
+      dispatch({ type: 'SET_CITY_ID', payload: '' });
+    }
+  }, [state.cities]);
 
   return (
     <AppContext.Provider value={{ state, dispatch, changeOffset }}>
