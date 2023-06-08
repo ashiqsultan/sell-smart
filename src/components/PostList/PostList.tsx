@@ -14,18 +14,10 @@ const PostList: React.FC = () => {
 
   const handlePreviousPage = () => {
     changeOffset(state.offset - state.limit);
-    // dispatch({
-    //   type: 'SET_OFFSET',
-    //   payload: state.offset - state.limit,
-    // });
   };
 
   const handleNextPage = () => {
     changeOffset(state.offset + state.limit);
-    // dispatch({
-    //   type: 'SET_OFFSET',
-    //   payload: state.offset + state.limit,
-    // });
   };
 
   return (

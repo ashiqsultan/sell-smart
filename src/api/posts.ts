@@ -48,8 +48,6 @@ export const create = async (
       image_ids,
     };
 
-    console.log('input data', data);
-
     const result: IPostDoc = await database.createDocument<IPostDoc>(
       databaseId,
       collectionId,
