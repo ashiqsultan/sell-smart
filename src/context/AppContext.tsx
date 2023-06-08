@@ -17,6 +17,8 @@ export interface IAppState {
   minPrice: number | null;
   maxPrice: number | null;
   userId: string;
+  limit: number;
+  offset: number;
 }
 
 type Action =
@@ -29,7 +31,8 @@ type Action =
   | { type: 'SET_CATEGORY_ID'; payload: string }
   | { type: 'SET_MIN_PRICE'; payload: number }
   | { type: 'SET_MAX_PRICE'; payload: number }
-  | { type: 'SET_USER_ID'; payload: string };
+  | { type: 'SET_USER_ID'; payload: string }
+  | { type: 'SET_OFFSET'; payload: number };
 
 const initialState: IAppState = {
   keyword: '',
@@ -42,6 +45,8 @@ const initialState: IAppState = {
   minPrice: null,
   maxPrice: null,
   userId: '',
+  limit: 2,
+  offset: 0,
 };
 
 const reducer = (state: IAppState, action: Action): IAppState => {
@@ -66,6 +71,8 @@ const reducer = (state: IAppState, action: Action): IAppState => {
       return { ...state, maxPrice: action.payload };
     case 'SET_USER_ID':
       return { ...state, userId: action.payload };
+    case 'SET_OFFSET':
+      return { ...state, offset: action.payload };
     default:
       return state;
   }
@@ -108,16 +115,7 @@ export const AppContextProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const filteredPosts = await filterPosts(state);
-        dispatch({ type: 'SET_FILTERED_POSTS', payload: filteredPosts });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
+    dispatch({ type: 'SET_OFFSET', payload: 0 });
   }, [
     state.keyword,
     state.stateId,
@@ -140,6 +138,19 @@ export const AppContextProvider: React.FC = ({ children }) => {
 
     fetchCities();
   }, [state.stateId]);
+
+  // Post Pagination
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const filteredPosts = await filterPosts(state, 0);
+        dispatch({ type: 'SET_FILTERED_POSTS', payload: filteredPosts });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, [state.offset]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

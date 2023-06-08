@@ -1,6 +1,7 @@
 import { IAppState } from '../context/AppContext';
 import {
   IPostDoc,
+  IQueryOptions,
   filterByState,
   filterByStateCity,
   filterTitle,
@@ -12,7 +13,8 @@ import {
 const apiFilters = async (
   keyword: string,
   stateId: string,
-  cityId: string
+  cityId: string,
+  options: IQueryOptions
 ): Promise<IPostDoc[]> => {
   // Condition: stateId, cityId, and keyword are present
   if (stateId && cityId && keyword) {
@@ -35,14 +37,28 @@ const apiFilters = async (
     return await filterTitle(keyword);
   }
   // Default case
-  return await getAll();
+  return await getAll(options);
 };
 const filterPosts = async (state: IAppState): Promise<IPostDoc[]> => {
-  const { keyword, stateId, cityId, categoryId, minPrice, maxPrice } = state;
+  const {
+    keyword,
+    stateId,
+    cityId,
+    categoryId,
+    minPrice,
+    maxPrice,
+    limit,
+    offset,
+  } = state;
+  const options: IQueryOptions = {
+    limit,
+    offset,
+  };
   const apiFilteredPosts: IPostDoc[] = await apiFilters(
     keyword,
     stateId,
-    cityId
+    cityId,
+    options
   );
   // Filter post by Category id
   let filteredPosts: IPostDoc[] = apiFilteredPosts;

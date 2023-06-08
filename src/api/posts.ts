@@ -16,16 +16,30 @@ export interface IPost {
 
 export interface IPostDoc extends IPost, Models.Document {}
 
+export interface IQueryOptions {
+  limit: number;
+  offset: number;
+}
+const defaultQueryOptions: IQueryOptions = { limit: 100, offset: 0 };
+
 const database = new Databases(client());
 const databaseId = config.database_id;
 const collectionId = config.collectionIds.posts;
 
-export const getAll = async (): Promise<IPostDoc[]> => {
+export const getAll = async (
+  options = defaultQueryOptions
+): Promise<IPostDoc[]> => {
   try {
+    console.log({ options });
+
     const response = await database.listDocuments<IPostDoc>(
       databaseId,
       collectionId,
-      [Query.orderDesc('$createdAt')]
+      [
+        Query.orderDesc('$createdAt'),
+        Query.limit(options.limit),
+        Query.offset(options.offset),
+      ]
     );
     return response.documents;
   } catch (error) {

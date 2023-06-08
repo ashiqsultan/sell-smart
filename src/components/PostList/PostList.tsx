@@ -1,5 +1,5 @@
 import { useContext, ChangeEvent } from 'react';
-import { TextField, List, ListItem, Box } from '@mui/material';
+import { TextField, List, ListItem, Box, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PostListItem from './PostListItem';
 import { AppContext } from '../../context/AppContext';
@@ -10,6 +10,20 @@ const PostList: React.FC = () => {
   const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newKeyword = event.target.value;
     dispatch({ type: 'SET_KEYWORD', payload: newKeyword });
+  };
+
+  const handlePreviousPage = () => {
+    dispatch({
+      type: 'SET_OFFSET',
+      payload: state.offset - state.limit,
+    });
+  };
+
+  const handleNextPage = () => {
+    dispatch({
+      type: 'SET_OFFSET',
+      payload: state.offset + state.limit,
+    });
   };
 
   return (
@@ -31,6 +45,25 @@ const PostList: React.FC = () => {
           </ListItem>
         ))}
       </List>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '1rem',
+          columnGap: '3rem',
+        }}
+      >
+        <Button
+          variant='outlined'
+          disabled={state.offset === 0}
+          onClick={handlePreviousPage}
+        >
+          Previous
+        </Button>
+        <Button variant='outlined' onClick={handleNextPage}>
+          Next
+        </Button>
+      </Box>
     </Box>
   );
 };
