@@ -1,8 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, CardMedia, Grid } from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
+import {
+  Card,
+  CardContent,
+  Typography,
+  CardMedia,
+  Grid,
+  IconButton,
+} from '@mui/material';
 import { getFileById } from '../../api/postImages';
 import { IPostDoc } from '../../api/posts';
 import { useNavigate } from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
+import { AppContext } from '../../context/AppContext';
 
 interface PostListItemProps {
   post: IPostDoc;
@@ -10,6 +19,9 @@ interface PostListItemProps {
 
 const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
   const [imageURL, setImageURL] = useState<string | null>(null);
+  const [isSessionUser, setIsSessionUser] = useState(false);
+
+  const { state } = useContext(AppContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,8 +39,14 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
     fetchImage();
   }, [post.image_ids]);
 
+  useEffect(() => {
+    setIsSessionUser(state.userId === post.user_id);
+  }, []);
   const handleCardClick = () => {
     navigate(`/post/${post.$id}`);
+  };
+  const handleEditClick = () => {
+    navigate(`/post/edit/${post.$id}`);
   };
 
   return (
@@ -40,7 +58,6 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
           cursor: 'pointer',
         },
       }}
-      onClick={handleCardClick}
     >
       <Grid container spacing={2}>
         <Grid item xs={3}>
@@ -50,11 +67,12 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
               height='200'
               image={imageURL}
               alt={post.title}
+              onClick={handleCardClick}
             />
           )}
         </Grid>
-        <Grid item xs={9}>
-          <CardContent>
+        <Grid item xs={isSessionUser ? 8 : 9}>
+          <CardContent onClick={handleCardClick}>
             <Typography variant='h5' component='div'>
               {post.title}
             </Typography>
@@ -70,6 +88,13 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
             </Typography>
           </CardContent>
         </Grid>
+        {isSessionUser && (
+          <Grid item xs={1} display={'flex'} alignItems={'center'}>
+            <IconButton onClick={handleEditClick}>
+              <EditIcon />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
     </Card>
   );
