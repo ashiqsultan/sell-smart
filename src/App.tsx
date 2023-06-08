@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import UserDetails from './pages/UserDetails';
 import ChatApp from './pages/ChatApp';
 import EditPost from './components/EditPost';
+import Chats from './pages/Chats';
 
 const theme = createTheme({
   palette: {
@@ -36,6 +37,7 @@ function App() {
             <Route path='/signup' element={<Signup />} />
             <Route path='/user/:userId' element={<UserDetails />} />
             <Route path='/chat/:chatId' element={<ChatApp />} />
+            <Route path='/chats' element={<Chats />} />
 
             <Route path='*' element={<div>404 Page Not Found</div>} />
           </Routes>

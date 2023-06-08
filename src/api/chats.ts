@@ -13,8 +13,6 @@ const database = new Databases(client());
 const databaseId = config.database_id;
 const collectionId = config.collectionIds.chats;
 
-let currentChatIdSubscription: any;
-
 export const getById = async (chatId: string): Promise<IChatDoc> => {
   const chat = await database.listDocuments<IChatDoc>(
     databaseId,
@@ -93,5 +91,21 @@ export const getOrCreateChatIdByIds = async (
     const newChat = await create(userIdA, userIdB);
     console.log('New chat created');
     return newChat.$id;
+  }
+};
+
+export const getUserChats = async (userId: string): Promise<IChatDoc[]> => {
+  try {
+    const response = await database.listDocuments<IChatDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('user1_id', [userId])]
+    );
+    console.log(response);
+
+    return response.documents;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
