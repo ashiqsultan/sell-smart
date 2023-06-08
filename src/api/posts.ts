@@ -26,120 +26,6 @@ const database = new Databases(client());
 const databaseId = config.database_id;
 const collectionId = config.collectionIds.posts;
 
-export const getAll = async (
-  options = defaultQueryOptions
-): Promise<IPostDoc[]> => {
-  try {
-    console.log({ options });
-
-    const response = await database.listDocuments<IPostDoc>(
-      databaseId,
-      collectionId,
-      [
-        Query.orderDesc('$createdAt'),
-        Query.limit(options.limit),
-        Query.offset(options.offset),
-      ]
-    );
-    return response.documents;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-export const getByUserId = async (user_id: string): Promise<IPostDoc[]> => {
-  try {
-    const response = await database.listDocuments<IPostDoc>(
-      databaseId,
-      collectionId,
-      [Query.equal('user_id', [user_id])]
-    );
-    return response.documents;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-export const filterByState = async (stateId: string): Promise<IPostDoc[]> => {
-  try {
-    const response = await database.listDocuments<IPostDoc>(
-      databaseId,
-      collectionId,
-      [Query.equal('state_id', [stateId])]
-    );
-    return response.documents;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-export const filterByStateCity = async (
-  stateId: string,
-  cityId: string
-): Promise<IPostDoc[]> => {
-  try {
-    const response = await database.listDocuments<IPostDoc>(
-      databaseId,
-      collectionId,
-      [Query.equal('state_id', [stateId]), Query.equal('city_id', [cityId])]
-    );
-    return response.documents;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-export const filterTitle = async (keyword: string): Promise<IPostDoc[]> => {
-  try {
-    const response = await database.listDocuments<IPostDoc>(
-      databaseId,
-      collectionId,
-      [Query.search('title', keyword)]
-    );
-    return response.documents;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-export const filterTitleState = async (
-  keyword: string,
-  stateId: string
-): Promise<IPostDoc[]> => {
-  try {
-    const response = await database.listDocuments<IPostDoc>(
-      databaseId,
-      collectionId,
-      [Query.search('title', keyword), Query.equal('state_id', [stateId])]
-    );
-    return response.documents;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-export const filterTitleStateCity = async (
-  keyword: string,
-  stateId: string,
-  cityId: string
-): Promise<IPostDoc[]> => {
-  try {
-    const response = await database.listDocuments<IPostDoc>(
-      databaseId,
-      collectionId,
-      [
-        Query.search('title', keyword),
-        Query.equal('state_id', [stateId]),
-        Query.equal('city_id', [cityId]),
-      ]
-    );
-    return response.documents;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 export const create = async (
   category_id: string,
   title: string,
@@ -176,7 +62,40 @@ export const create = async (
     throw error;
   }
 };
+export const getAll = async (
+  options = defaultQueryOptions
+): Promise<IPostDoc[]> => {
+  try {
+    console.log({ options });
 
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [
+        Query.orderDesc('$createdAt'),
+        Query.limit(options.limit),
+        Query.offset(options.offset),
+      ]
+    );
+    return response.documents;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const getByUserId = async (user_id: string): Promise<IPostDoc[]> => {
+  try {
+    const response = await database.listDocuments<IPostDoc>(
+      databaseId,
+      collectionId,
+      [Query.equal('user_id', [user_id])]
+    );
+    return response.documents;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const getById = async (id: string): Promise<IPostDoc> => {
   try {
     const docs = await database.listDocuments<IPostDoc>(
@@ -189,5 +108,48 @@ export const getById = async (id: string): Promise<IPostDoc> => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const apiFilters = async (
+  keyword: string,
+  stateId: string,
+  cityId: string,
+  categoryId: string,
+  options: IQueryOptions
+): Promise<IPostDoc[]> => {
+  const filterQueries = [];
+
+  if (stateId) {
+    filterQueries.push(Query.equal('state_id', [stateId]));
+  }
+
+  if (cityId) {
+    filterQueries.push(Query.equal('city_id', [cityId]));
+  }
+
+  if (categoryId) {
+    filterQueries.push(Query.equal('category_id', [categoryId]));
+  }
+
+  if (keyword) {
+    filterQueries.push(Query.search('title', keyword));
+  }
+  console.log({filterQueries});
+  if (filterQueries.length > 0) {
+    try {
+      const response = await database.listDocuments<IPostDoc>(
+        databaseId,
+        collectionId,
+        filterQueries
+      );
+      return response.documents;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  } else {
+    const response = await getAll(options);
+    return response;
   }
 };

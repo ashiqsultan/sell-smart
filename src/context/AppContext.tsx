@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect } from 'react';
+import { createContext, useReducer, useEffect, useCallback } from 'react';
 import { IPostDoc } from '../api/posts';
 import { ICity, getByStateId } from '../api/cities';
 import filterPosts from '../util/filterPosts';
@@ -81,13 +81,33 @@ const reducer = (state: IAppState, action: Action): IAppState => {
 export const AppContext = createContext<{
   state: IAppState;
   dispatch: React.Dispatch<Action>;
+  changeOffset: (newOffset: number) => void;
 }>({
   state: initialState,
   dispatch: () => null,
+  changeOffset: () => null,
 });
 
 export const AppContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const updatePosts = useCallback(
+    async (offset: number) => {
+      try {
+        const filteredPosts = await filterPosts(state, offset);
+        dispatch({ type: 'SET_FILTERED_POSTS', payload: filteredPosts });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [state]
+  );
+  const changeOffset = useCallback(
+    (newOffset: number) => {
+      dispatch({ type: 'SET_OFFSET', payload: newOffset });
+      updatePosts(newOffset);
+    },
+    [dispatch, updatePosts]
+  );
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -109,13 +129,12 @@ export const AppContextProvider: React.FC = ({ children }) => {
         console.error(error);
       }
     };
-
     getSessionInfo();
     fetchCategories();
   }, []);
 
   useEffect(() => {
-    dispatch({ type: 'SET_OFFSET', payload: 0 });
+    updatePosts(0);
   }, [
     state.keyword,
     state.stateId,
@@ -139,21 +158,8 @@ export const AppContextProvider: React.FC = ({ children }) => {
     fetchCities();
   }, [state.stateId]);
 
-  // Post Pagination
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const filteredPosts = await filterPosts(state, 0);
-        dispatch({ type: 'SET_FILTERED_POSTS', payload: filteredPosts });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, [state.offset]);
-
   return (
-    <AppContext.Provider value={{ state, dispatch }}>
+    <AppContext.Provider value={{ state, dispatch, changeOffset }}>
       {children}
     </AppContext.Provider>
   );

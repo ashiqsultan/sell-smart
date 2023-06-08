@@ -5,7 +5,7 @@ import PostListItem from './PostListItem';
 import { AppContext } from '../../context/AppContext';
 
 const PostList: React.FC = () => {
-  const { state, dispatch } = useContext(AppContext);
+  const { state, dispatch, changeOffset } = useContext(AppContext);
 
   const handleKeywordChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newKeyword = event.target.value;
@@ -13,17 +13,19 @@ const PostList: React.FC = () => {
   };
 
   const handlePreviousPage = () => {
-    dispatch({
-      type: 'SET_OFFSET',
-      payload: state.offset - state.limit,
-    });
+    changeOffset(state.offset - state.limit);
+    // dispatch({
+    //   type: 'SET_OFFSET',
+    //   payload: state.offset - state.limit,
+    // });
   };
 
   const handleNextPage = () => {
-    dispatch({
-      type: 'SET_OFFSET',
-      payload: state.offset + state.limit,
-    });
+    changeOffset(state.offset + state.limit);
+    // dispatch({
+    //   type: 'SET_OFFSET',
+    //   payload: state.offset + state.limit,
+    // });
   };
 
   return (
