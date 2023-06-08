@@ -78,6 +78,12 @@ const EditPost = () => {
     fetchPostData();
   }, [postId]);
 
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'CLEAR_FILTERS' });
+    };
+  }, []);
+
   const handleDeletePost = async () => {
     // Handle the delete post functionality
     console.log('Delete post:', postId);
