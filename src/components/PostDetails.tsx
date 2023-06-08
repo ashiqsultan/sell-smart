@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import { IPostDoc, getById } from '../api/posts';
-import { useParams } from 'react-router-dom';
 import PostImageViewer from './PostImageViewer';
 
 import LocationCityIcon from '@mui/icons-material/LocationCity';
@@ -11,8 +10,7 @@ import * as stateAPI from '../api/states';
 import * as cityAPI from '../api/cities';
 import UserDetailsCard from './UserDetailsCard';
 
-const PostDetails: React.FC = () => {
-  const { postId } = useParams();
+const PostDetails: React.FC<{postId:string}> = ({postId}) => {
   const [post, setPost] = useState<IPostDoc | null>(null);
   const [stateLocation, setStateLocation] = useState('');
   const [city, setCity] = useState('');

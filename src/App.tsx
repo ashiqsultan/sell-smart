@@ -3,7 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { AppContextProvider } from './context/AppContext';
 import AppBar from './components/AppBar';
 import CreatePost from './components/CreatePosts';
-import PostDetails from './components/PostDetails';
+import PostDetails from './pages/PostDetails';
 import PostList from './components/PostList/PostList';
 import Home from './pages/Home';
 import Signup from './pages/Signup';
