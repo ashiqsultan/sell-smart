@@ -108,10 +108,7 @@ export const getById = async (id: string): Promise<IPostDoc> => {
     throw error;
   }
 };
-export const updatePost = async (
-  id: string,
-  data: any
-): Promise<IPostDoc> => {
+export const updatePost = async (id: string, data: any): Promise<IPostDoc> => {
   try {
     const doc = await database.updateDocument<IPostDoc>(
       databaseId,
@@ -119,6 +116,16 @@ export const updatePost = async (
       id,
       data
     );
+    return doc;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const deletePost = async (id: string): Promise<any> => {
+  try {
+    const doc = await database.deleteDocument(databaseId, collectionId, id);
+    console.log({ doc });
     return doc;
   } catch (error) {
     console.error(error);
@@ -150,7 +157,7 @@ export const apiFilters = async (
   if (keyword) {
     filterQueries.push(Query.search('title', keyword));
   }
-  console.log({filterQueries});
+  console.log({ filterQueries });
   if (filterQueries.length > 0) {
     try {
       const response = await database.listDocuments<IPostDoc>(
