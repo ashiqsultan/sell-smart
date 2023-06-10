@@ -1,0 +1,22 @@
+:root {
+  background-color: #fcfcff;
+  /* background-color: #EAEBED; */
+}
+
+.speech-bubble {
+  position: relative;
+  background-color: red;
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 60%;
+  max-width: 70%;
+  margin: 20px;
+}
+
+.speech-bubble.right {
+  background-color: #C1EDCC;
+}
+
+.speech-bubble.left {
+  background-color: #63bba3;
+}

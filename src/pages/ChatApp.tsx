@@ -103,31 +103,22 @@ const ChatApp = () => {
       <Box overflow='auto'>
         {Array.isArray(messages) && messages.length > 0 ? (
           messages.map((message, index) => (
-            <Grid
+            <Box
               key={index}
-              container
+              display={'flex'}
               justifyContent={
                 message.sender_id === currentUserId ? 'flex-end' : 'flex-start'
               }
               alignItems='center'
             >
-              <Grid item xs={6}>
-                <div
-                  style={{
-                    background: '#f0f0f0',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    marginBottom: '10px',
-                    marginLeft:
-                      message.sender_id === currentUserId ? '10px' : '0',
-                    marginRight:
-                      message.sender_id !== currentUserId ? '10px' : '0',
-                  }}
-                >
-                  {message.content}
-                </div>
-              </Grid>
-            </Grid>
+              <div
+                className={`speech-bubble ${
+                  message.sender_id === currentUserId ? 'right' : 'left'
+                }`}
+              >
+                {message.content}
+              </div>
+            </Box>
           ))
         ) : (
           <div>
@@ -137,7 +128,12 @@ const ChatApp = () => {
       </Box>
 
       {/* Input field and send button */}
-      <Box display={'flex'} justifyContent={'space-evenly'} columnGap={'1rem'} padding={1}>
+      <Box
+        display={'flex'}
+        justifyContent={'space-evenly'}
+        columnGap={'1rem'}
+        padding={1}
+      >
         <TextField
           sx={{ border: '', borderRadius: '12px' }}
           fullWidth
