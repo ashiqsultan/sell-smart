@@ -83,6 +83,9 @@ const CreatePostForm = () => {
   };
 
   const handleCreatePost = async () => {
+    if (uploadedFiles.length <= 0) {
+      showSnackbar('Please upload at least one Image', 'error');
+    }
     const areFieldsValid = validateFields(); // Check if fields are valid
     if (areFieldsValid) {
       try {
@@ -128,7 +131,7 @@ const CreatePostForm = () => {
         {/* Snackbar component */}
         <Snackbar
           open={snackbarOpen}
-          autoHideDuration={5000}
+          autoHideDuration={2000}
           onClose={closeSnackbar}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
