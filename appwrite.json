@@ -1,0 +1,21 @@
+{
+  "projectId": "demo_project",
+  "projectName": "demo_project",
+  "functions": [
+    {
+      "$id": "648453246a03c181a2e4",
+      "name": "clean_posts_func",
+      "runtime": "node-16.0",
+      "path": "functions/clean_posts_func",
+      "entrypoint": "src/index.js",
+      "ignore": ["node_modules", ".npm"],
+      "execute": [],
+      "events": [
+        "databases.6476077a857050fb07e9.collections.64763c98e85448c672e1.documents.*.create",
+        "databases.6476077a857050fb07e9.collections.64763c98e85448c672e1.documents.*.update"
+      ],
+      "schedule": "",
+      "timeout": 15
+    }
+  ]
+}
