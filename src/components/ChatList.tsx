@@ -43,6 +43,7 @@ const ChatList = () => {
             <ListItem
               key={chat.chatId}
               onClick={() => handleCardClick(chat.chatId)}
+              sx={{ cursor: 'pointer' }}
             >
               <Card sx={{ width: '100%' }}>
                 <CardContent>

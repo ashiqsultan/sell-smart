@@ -137,26 +137,25 @@ const ChatApp = () => {
       </Box>
 
       {/* Input field and send button */}
-      <Grid container alignItems='center'>
-        <Grid item xs={10}>
-          <TextField
-            fullWidth
-            placeholder='Type a message'
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            variant='contained'
-            endIcon={<SendIcon />}
-            onClick={handleSend}
-          >
-            Send
-          </Button>
-        </Grid>
-      </Grid>
+      <Box display={'flex'} justifyContent={'space-evenly'} columnGap={'1rem'} padding={1}>
+        <TextField
+          sx={{ border: '', borderRadius: '12px' }}
+          fullWidth
+          placeholder='Type a message'
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+
+        <Button
+          variant='contained'
+          endIcon={<SendIcon />}
+          onClick={handleSend}
+          sx={{ borderRadius: '12px' }}
+        >
+          Send
+        </Button>
+      </Box>
     </Box>
   );
 };
