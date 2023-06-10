@@ -18,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditImages from './EditImages';
 import FileUpload from './FileUpload';
 import { deleteFile, uploadFilesPromise } from '../api/postImages';
+import ModalProgress from './ModalProgress';
 
 const EditPost = () => {
   const { postId } = useParams();
@@ -31,6 +32,7 @@ const EditPost = () => {
     price: 0,
     description: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +44,7 @@ const EditPost = () => {
 
   const handleUpdatePost = async () => {
     try {
+      setIsLoading(true);
       const { title, price, description } = formData;
       const updateData = {
         category_id: categoryId,
@@ -63,13 +66,16 @@ const EditPost = () => {
       dispatch({ type: 'SET_CATEGORY_ID', payload: '' });
       dispatch({ type: 'SET_STATE_ID', payload: '' });
       setUploadedFiles([]);
+      setIsLoading(false);
       navigate(`/post/${postId}`);
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
     }
   };
   const fetchPostData = async () => {
     try {
+      setIsLoading(true);
       const postData: IPostDoc = await getById(postId);
       setFormData({
         title: postData.title,
@@ -82,7 +88,9 @@ const EditPost = () => {
       setTimeout(() => {
         dispatch({ type: 'SET_CITY_ID', payload: postData.city_id });
       }, 0);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
     }
   };
@@ -113,6 +121,7 @@ const EditPost = () => {
 
   return (
     <>
+      <ModalProgress isOpen={isLoading} />
       <Card>
         <CardContent>
           <Box display={'flex'} flexDirection={'column'} rowGap={'2rem'}>
