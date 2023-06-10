@@ -16,6 +16,8 @@ import StateSelector from './Selectors/StateSelector';
 import CitySelector from './Selectors/CitySelector';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditImages from './EditImages';
+import FileUpload from './FileUpload';
+import { deleteFile, uploadFilesPromise } from '../api/postImages';
 
 const EditPost = () => {
   const { postId } = useParams();
@@ -23,7 +25,7 @@ const EditPost = () => {
   const { state, dispatch } = useContext(AppContext);
   const { categoryId, stateId, cityId } = state;
   const [imageIds, setImageIds] = useState([]);
-
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     price: 0,
@@ -44,14 +46,23 @@ const EditPost = () => {
       const updateData = {
         category_id: categoryId,
         state_id: stateId,
-        city_id: cityId,
         title,
         price,
         description,
       };
+      if (state.cityId) {
+        updateData.city_id = cityId;
+      }
+      let uploadedFileIds: string[] = [];
+      if (uploadedFiles.length > 0) {
+        uploadedFileIds = await uploadFilesPromise(uploadedFiles);
+        updateData.image_ids = [...imageIds, ...uploadedFileIds];
+      }
+
       await updatePost(postId, updateData);
       dispatch({ type: 'SET_CATEGORY_ID', payload: '' });
       dispatch({ type: 'SET_STATE_ID', payload: '' });
+      setUploadedFiles([]);
       navigate(`/post/${postId}`);
     } catch (error) {
       console.error(error);
@@ -76,25 +87,29 @@ const EditPost = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPostData();
-  }, [postId]);
-
-  useEffect(() => {
-    return () => {
-      dispatch({ type: 'CLEAR_FILTERS' });
-    };
-  }, []);
-
   const handleDeletePost = async () => {
     console.log('Delete post:', postId);
     await deletePost(postId);
     navigate('/');
   };
 
-  const onImageDelete = (removedImageId: string) => {
-    setImageIds((ids) => ids.filter((i) => i !== removedImageId));
+  const onImageDelete = async (removedImageId: string) => {
+    const newImageIds = imageIds.filter((i) => i !== removedImageId);
+    setImageIds(newImageIds);
+    await deleteFile(removedImageId);
+    await updatePost(postId, { image_ids: newImageIds });
   };
+
+  useEffect(() => {
+    fetchPostData();
+  }, [postId]);
+
+  //  Cleanup
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'CLEAR_FILTERS' });
+    };
+  }, []);
 
   return (
     <>
@@ -139,6 +154,9 @@ const EditPost = () => {
             />
             <StateSelector />
             <CitySelector />
+            <Box>
+              <FileUpload onFilesChange={setUploadedFiles} />
+            </Box>
             <Box display={'flex'} justifyContent={'flex-end'}>
               <Button
                 variant='contained'
@@ -151,15 +169,18 @@ const EditPost = () => {
           </Box>
         </CardContent>
       </Card>
-      <Box
-        marginTop={'1rem'}
-        marginBottom={'2rem'}
-        display={'flex'}
-        justifyContent={'flex-start'}
-        flexWrap={'wrap'}
-        columnGap={2}
-      >
-        <ul>
+
+      <Box>
+        <ul
+          style={{
+            marginTop: '1rem',
+            marginBottom: '2rem',
+            display: 'flex',
+            justifyContent: 'flex-start',
+            flexWrap: 'wrap',
+            columnGap: 2,
+          }}
+        >
           {Array.isArray(imageIds) &&
             imageIds.length > 0 &&
             imageIds.map((imageId) => (

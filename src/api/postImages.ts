@@ -23,3 +23,23 @@ export const getFileById = async (fileId: string): Promise<URL> => {
     throw error;
   }
 };
+
+export const deleteFile = async (fileId: string): Promise<void> => {
+  try {
+    await storage.deleteFile(bucketId, fileId);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const uploadFilesPromise = async (files: File[]) => {
+  try {
+    const promises: Array<Promise<string>> = files.map((file) => upload(file));
+    const uploadedFileIds = await Promise.all(promises);
+    return uploadedFileIds;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

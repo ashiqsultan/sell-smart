@@ -3,10 +3,10 @@ import { getFileById } from '../api/postImages';
 import { Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const EditImage: React.FC<{ imageId: string; onImageDelete: () => void }> = ({
-  imageId,
-  onImageDelete,
-}) => {
+const EditImage: React.FC<{
+  imageId: string;
+  onImageDelete: () => Promise<void>;
+}> = ({ imageId, onImageDelete }) => {
   const [imageURL, setImageURL] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,8 +23,8 @@ const EditImage: React.FC<{ imageId: string; onImageDelete: () => void }> = ({
     console.log({ imageId });
     fetchImage();
   }, []);
-  const handleDeleteImage = () => {
-    onImageDelete(imageId);
+  const handleDeleteImage = async () => {
+    await onImageDelete(imageId);
   };
 
   return (
