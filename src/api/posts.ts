@@ -157,6 +157,11 @@ export const apiFilters = async (
   if (keyword) {
     filterQueries.push(Query.search('title', keyword));
   }
+  filterQueries.push(
+    Query.orderDesc('$createdAt'),
+    Query.limit(options.limit),
+    Query.offset(options.offset)
+  );
   console.log({ filterQueries });
   if (filterQueries.length > 0) {
     try {
