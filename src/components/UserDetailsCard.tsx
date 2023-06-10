@@ -13,7 +13,13 @@ import {
   TextField,
   IconButton,
 } from '@mui/material';
-import { AccountCircle, Phone, Today, Chat } from '@mui/icons-material';
+import {
+  AccountCircle,
+  PhoneIphone,
+  Today,
+  Chat,
+} from '@mui/icons-material';
+
 import {
   getById,
   IUserDetailsDoc,
@@ -131,7 +137,7 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
             {isSessionUser && (
               <Grid container spacing={2} alignItems='center' my={1}>
                 <Grid item>
-                  <Phone color='info' />
+                  <PhoneIphone color='info' />
                 </Grid>
                 <Grid item>
                   <Typography variant='body1'>{phone_number}</Typography>
