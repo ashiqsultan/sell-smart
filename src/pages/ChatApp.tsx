@@ -51,10 +51,8 @@ const ChatApp = () => {
   };
 
   const chatIdSub = useCallback(() => {
-    subscription = client().subscribe([channel], (response) => {
-      // @ts-ignore
+    subscription = client().subscribe([channel], (response: any) => {
       if (response?.payload?.last_message_id) {
-        // @ts-ignore
         const msgId = response?.payload?.last_message_id;
         updateMessagesArray(msgId);
       }
