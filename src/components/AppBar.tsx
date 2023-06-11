@@ -69,8 +69,12 @@ function MainAppBar() {
 
   useEffect(() => {
     const updateUserName = async () => {
-      const userDetails = await getById(state.userId);
-      setUserName(userDetails.name);
+      if (state.userId) {
+        const userDetails = await getById(state.userId);
+        setUserName(userDetails.name);
+      } else {
+        setUserName(null);
+      }
     };
     updateUserName();
   }, [state.userId]);
