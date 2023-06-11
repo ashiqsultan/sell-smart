@@ -69,7 +69,6 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
               alt={post.title}
               height='100'
               onClick={handleCardClick}
-              sx={{}}
             />
           )}
         </Grid>
