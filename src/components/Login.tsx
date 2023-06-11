@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../api/account';
 import { useContext, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Avatar, Card, CardContent, Typography } from '@mui/material';
+import { Avatar, Card, CardContent, Typography, Link } from '@mui/material';
 import { Lock } from '@mui/icons-material';
 const Login = () => {
   const navigate = useNavigate();
@@ -89,6 +89,9 @@ const Login = () => {
               Sign In
             </Button>
           </Box>
+          <Link href='/signup' variant='body2'>
+            {"Don't have an account? Sign Up"}
+          </Link>
         </CardContent>
       </Card>
     </Box>

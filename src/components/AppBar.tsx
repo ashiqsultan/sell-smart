@@ -37,7 +37,11 @@ function MainAppBar() {
     navigate('/signup');
   };
   const onSellClick = () => {
-    navigate('/create-post');
+    if (state.userId) {
+      navigate('/create-post');
+    } else {
+      navigate('/login');
+    }
   };
   const handleLogoutClick = async () => {
     await logout();
