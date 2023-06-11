@@ -46,7 +46,7 @@ const EditPost = () => {
     try {
       setIsLoading(true);
       const { title, price, description } = formData;
-      const updateData = {
+      const updateData: any = {
         category_id: categoryId,
         state_id: stateId,
         title,

@@ -28,7 +28,8 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
     const fetchImage = async () => {
       if (post.image_ids && post.image_ids.length > 0) {
         try {
-          const file = await getFileById(post.image_ids[0]); // Fetch the image using the API function
+          const file = await getFileById(post.image_ids[0]);
+          // @ts-ignore
           setImageURL(file);
         } catch (error) {
           console.error(error);

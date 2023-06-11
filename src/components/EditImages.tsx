@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const EditImage: React.FC<{
   imageId: string;
-  onImageDelete: () => Promise<void>;
+  onImageDelete: (id: string) => Promise<void>;
 }> = ({ imageId, onImageDelete }) => {
   const [imageURL, setImageURL] = useState<string | null>(null);
 
@@ -13,7 +13,8 @@ const EditImage: React.FC<{
     const fetchImage = async () => {
       if (imageId) {
         try {
-          const file = await getFileById(imageId); // Fetch the image using the API function
+          const file = await getFileById(imageId);
+          // @ts-ignore
           setImageURL(file);
         } catch (error) {
           console.error(error);

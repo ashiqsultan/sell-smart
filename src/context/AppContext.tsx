@@ -99,7 +99,9 @@ export const AppContext = createContext<{
   changeOffset: () => null,
 });
 
-export const AppContextProvider: React.FC = ({ children }) => {
+export const AppContextProvider: React.FC<{ children: any }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const updatePosts = useCallback(
     async (offset: number) => {

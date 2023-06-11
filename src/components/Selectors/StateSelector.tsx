@@ -20,7 +20,7 @@ const StateSelector: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleStateChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleStateChange = (event: any) => {
     const stateId = event.target.value as string;
     dispatch({ type: 'SET_STATE_ID', payload: stateId });
   };

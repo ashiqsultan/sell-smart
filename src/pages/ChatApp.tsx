@@ -52,12 +52,12 @@ const ChatApp = () => {
 
   const chatIdSub = useCallback(() => {
     subscription = client().subscribe([channel], (response) => {
-      console.log(response?.payload?.last_message_id);
+      // @ts-ignore
       if (response?.payload?.last_message_id) {
+        // @ts-ignore
         const msgId = response?.payload?.last_message_id;
         updateMessagesArray(msgId);
       }
-      // fetchMessages();
     });
   }, [channel]);
 

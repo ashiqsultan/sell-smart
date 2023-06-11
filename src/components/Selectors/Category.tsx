@@ -7,9 +7,7 @@ const Category: React.FC = () => {
   const { state, dispatch } = useContext(AppContext);
   const { categories, categoryId } = state;
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
+  const handleCategoryChange = (event: any) => {
     const categoryId = event.target.value as string;
     dispatch({ type: 'SET_CATEGORY_ID', payload: categoryId });
   };

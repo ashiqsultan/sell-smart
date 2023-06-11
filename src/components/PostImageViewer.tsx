@@ -38,6 +38,7 @@ const PostImageViewer: React.FC<IPostImageViewerProps> = ({ imageIds }) => {
 
   return (
     <Box mt={2}>
+      {/* @ts-ignore */}
       <Carousel>
         {images.map((item) => (
           <div key={item.href || ''}>

@@ -187,7 +187,7 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
             </Button>
             <Button
               color='primary'
-              startIcon={<Phone />}
+              startIcon={<PhoneIphone />}
               onClick={handlePhoneCall}
             >
               Call
