@@ -21,11 +21,12 @@ import { deleteFile, uploadFilesPromise } from '../api/postImages';
 import ModalProgress from './ModalProgress';
 
 const EditPost = () => {
-  const { postId } = useParams();
+  const params = useParams();
+  const postId = params.postId || '';
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
   const { categoryId, stateId, cityId } = state;
-  const [imageIds, setImageIds] = useState([]);
+  const [imageIds, setImageIds] = useState<string[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
@@ -34,7 +35,7 @@ const EditPost = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -61,7 +62,6 @@ const EditPost = () => {
         uploadedFileIds = await uploadFilesPromise(uploadedFiles);
         updateData.image_ids = [...imageIds, ...uploadedFileIds];
       }
-
       await updatePost(postId, updateData);
       dispatch({ type: 'SET_CATEGORY_ID', payload: '' });
       dispatch({ type: 'SET_STATE_ID', payload: '' });
@@ -80,7 +80,7 @@ const EditPost = () => {
       setFormData({
         title: postData.title,
         price: postData.price,
-        description: postData.description,
+        description: postData.description || '',
       });
       setImageIds(postData.image_ids);
       dispatch({ type: 'SET_CATEGORY_ID', payload: postData.category_id });

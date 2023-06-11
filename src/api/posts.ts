@@ -11,7 +11,7 @@ export interface IPost {
   state_id: string;
   city_id: string;
   description?: string;
-  image_ids?: string[];
+  image_ids: string[];
 }
 
 export interface IPostDoc extends IPost, Models.Document {}

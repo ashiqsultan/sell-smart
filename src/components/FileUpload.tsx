@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface FileUploadProps {
-  onFilesChange: (files: File[]) => void;
+  onFilesChange: any;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onFilesChange }) => {

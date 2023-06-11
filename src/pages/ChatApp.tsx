@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TextField, Button, Grid, Box, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useParams } from 'react-router-dom';
@@ -13,8 +13,9 @@ const collectionId = config.collectionIds.chats;
 let subscription: any;
 
 const ChatApp = () => {
-  const { chatId } = useParams();
-  const [messages, setMessages] = useState<IMessageDoc[] | null>(null);
+  const params = useParams();
+  const chatId = params.chatId || '';
+  const [messages, setMessages] = useState<IMessageDoc[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
   const [channel, setChannel] = useState('');
@@ -28,7 +29,7 @@ const ChatApp = () => {
     }
   }, [chatId]);
   const updateMessagesArray = useCallback(
-    async (id) => {
+    async (id: string) => {
       try {
         const newMsg = await messageAPI.getById(id);
         setMessages((messages) => [...messages, newMsg]);
@@ -44,7 +45,7 @@ const ChatApp = () => {
       setNewMessage('');
     }
   };
-  const handleKeyDown = async (e) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<any>) => {
     if (e.key === 'Enter') {
       await handleSend();
     }

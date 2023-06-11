@@ -19,7 +19,7 @@ const UserDetails: React.FC = () => {
   }, []);
   return (
     <>
-      <UserDetailsCard userId={userId} />
+      <UserDetailsCard userId={userId || ''} />
       <Typography variant='h6' my={2}>
         {isSessionUser ? 'Your Posts' : 'User Posts'}
       </Typography>

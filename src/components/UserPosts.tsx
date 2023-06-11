@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { IPostDoc, getByUserId } from '../api/posts';
 import PostListItem from './PostList/PostListItem';
 
-const UserPosts = ({ userId }) => {
+const UserPosts: React.FC<{ userId?: string }> = ({ userId }) => {
   const [userPosts, setUserPosts] = useState<IPostDoc[]>([]);
 
   useEffect(() => {
     const fetchUserPosts = async () => {
       try {
         // Get all posts of the user
-        const posts = await getByUserId(userId);
+        const posts = await getByUserId(userId || '');
         setUserPosts(posts);
       } catch (error) {
         console.error(error);

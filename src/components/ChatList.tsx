@@ -26,7 +26,7 @@ const ChatList = () => {
     fetchChats();
   }, [state.userId]);
 
-  const handleCardClick = (chatId) => {
+  const handleCardClick = (chatId:string) => {
     navigate(`/chat/${chatId}`);
   };
 

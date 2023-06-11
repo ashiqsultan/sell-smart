@@ -13,12 +13,7 @@ import {
   TextField,
   IconButton,
 } from '@mui/material';
-import {
-  AccountCircle,
-  PhoneIphone,
-  Today,
-  Chat,
-} from '@mui/icons-material';
+import { AccountCircle, PhoneIphone, Today, Chat } from '@mui/icons-material';
 
 import {
   getById,
@@ -84,8 +79,8 @@ const UserDetailsCard: React.FC<{ userId: string }> = ({ userId }) => {
   const handleEditOpen = () => {
     setIsEditOpen(true);
     setUpdatedName(name);
-    setUpdatedBio(bio);
-    setUpdatedPhoneNumber(phone_number);
+    setUpdatedBio(bio || '');
+    setUpdatedPhoneNumber(phone_number || '');
   };
 
   const handleEditClose = () => {
