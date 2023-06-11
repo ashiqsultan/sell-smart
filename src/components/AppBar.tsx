@@ -91,7 +91,14 @@ function MainAppBar() {
           sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}
           flexGrow={1}
         >
-          <StoreIcon sx={{ mr: 1 }} />
+          <IconButton
+            onClick={() => {
+              navigate('/');
+            }}
+            sx={{ mr: 1 }}
+          >
+            <StoreIcon sx={{ color: 'white' }} />
+          </IconButton>
           <Typography
             variant='h6'
             noWrap
@@ -122,7 +129,14 @@ function MainAppBar() {
             alignItems={'center'}
             flexGrow={1}
           >
-            <StoreIcon sx={{ mr: 1 }} />
+            <IconButton
+              onClick={() => {
+                navigate('/');
+              }}
+              sx={{ mr: 1 }}
+            >
+              <StoreIcon sx={{ color: 'white' }} />
+            </IconButton>
             <Typography
               variant='h6'
               noWrap
