@@ -1,5 +1,12 @@
 import { useContext, ChangeEvent } from 'react';
-import { TextField, List, ListItem, Box, Button } from '@mui/material';
+import {
+  TextField,
+  List,
+  ListItem,
+  Box,
+  Button,
+  Typography,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PostListItem from './PostListItem';
 import { AppContext } from '../../context/AppContext';
@@ -32,6 +39,12 @@ const PostList: React.FC = () => {
           startAdornment: <SearchIcon />,
         }}
       />
+      {state.filteredPosts.length === 0 && state.offset === 0 && (
+        <Typography variant='h6'> No Posts available</Typography>
+      )}
+      {state.filteredPosts.length === 0 && state.offset > 0 && (
+        <Typography variant='h6'> No more Posts available</Typography>
+      )}
       <List>
         {state.filteredPosts.map((post) => (
           <ListItem key={post.$id}>
@@ -54,7 +67,11 @@ const PostList: React.FC = () => {
         >
           Previous
         </Button>
-        <Button variant='outlined' onClick={handleNextPage}>
+        <Button
+          variant='outlined'
+          onClick={handleNextPage}
+          disabled={state.filteredPosts.length === 0}
+        >
           Next
         </Button>
       </Box>
