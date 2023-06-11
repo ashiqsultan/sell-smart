@@ -65,19 +65,20 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
           {imageURL && (
             <CardMedia
               component='img'
-              height='200'
               image={imageURL}
               alt={post.title}
+              height='100'
               onClick={handleCardClick}
+              sx={{}}
             />
           )}
         </Grid>
         <Grid item xs={isSessionUser ? 8 : 9}>
           <CardContent onClick={handleCardClick}>
-            <Typography variant='h5' component='div'>
+            <Typography variant='h6' component='div'>
               {post.title}
             </Typography>
-            <Typography variant='h6' color='#93b592' fontWeight='bold'>
+            <Typography variant='h6' color='green' fontWeight='bold'>
               ₹{post.price}
             </Typography>
             <Typography variant='body2' color='grey' fontWeight='light'>

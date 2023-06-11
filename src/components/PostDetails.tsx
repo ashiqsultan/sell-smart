@@ -39,7 +39,7 @@ const PostDetails: React.FC<{postId:string}> = ({postId}) => {
   const { user_id, title, price, description, image_ids, $createdAt } = post;
 
   return (
-    <Box p={3}>
+    <Box>
       <Grid container spacing={4} mt={3} wrap='wrap'>
         <Grid item xs={12} sm={6}>
           <PostImageViewer imageIds={image_ids || []} />
