@@ -1,40 +1,71 @@
+import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import Avatar from '@mui/material/Avatar';
+import MenuItem from '@mui/material/MenuItem';
+import StoreIcon from '@mui/icons-material/Store';
+import { Person, Chat, ExitToApp, Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { getInfo, logout } from '../api/account';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';
-import LogoutIcon from '@mui/icons-material/Logout';
-import StoreIcon from '@mui/icons-material/Store';
-import ChatIcon from '@mui/icons-material/Chat';
-
+import { logout } from '../api/account';
 import { getById } from '../api/userDetails';
+import LoginIcon from '@mui/icons-material/Login';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
-export default function MainAppBar() {
+function MainAppBar() {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
   const [userName, setUserName] = useState<string | null>(null);
-
-  const handleLoginClick = () => {
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+  const onLoginClick = () => {
     navigate('/login');
   };
 
-  const handleCreateAccountClick = () => {
+  const onSignUpClick = () => {
     navigate('/signup');
   };
-  const handleSellClick = () => {
+  const onSellClick = () => {
     navigate('/create-post');
   };
   const handleLogoutClick = async () => {
     await logout();
     dispatch({ type: 'SET_USER_ID', payload: '' });
+    navigate(`/`);
   };
+
+  const onProfileClick = () => {
+    if (state.userId) {
+      navigate(`/user/${state.userId}`);
+    }
+  };
+  const onChatsClick = () => {
+    if (state.userId) {
+      navigate(`/chats`);
+    }
+  };
+
+  const profilePages = [
+    { name: 'Profile', icon: <Person />, onClick: onProfileClick },
+    { name: 'Chats', icon: <Chat />, onClick: onChatsClick },
+    { name: 'Logout', icon: <ExitToApp />, onClick: handleLogoutClick },
+  ];
+
+  const newUserMenu = [
+    { name: 'Login', icon: <LoginIcon />, onClick: onLoginClick },
+    { name: 'Signup', icon: <ManageAccountsIcon />, onClick: onSignUpClick },
+  ];
 
   useEffect(() => {
     const updateUserName = async () => {
@@ -44,104 +75,118 @@ export default function MainAppBar() {
     updateUserName();
   }, [state.userId]);
 
-  const onProfileClick = () => {
-    if (state.userId) {
-      navigate(`/user/${state.userId}`);
-    }
-  };
-
   return (
-    <>
-      <AppBar>
-        <Toolbar>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
+    <AppBar position='static'>
+      <Toolbar>
+        {/* Desktop */}
+        <Box
+          sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}
+          flexGrow={1}
+        >
+          <StoreIcon sx={{ mr: 1 }} />
+          <Typography
+            variant='h6'
+            noWrap
+            component='a'
+            href='/'
+            sx={{
+              ml: 2,
+              fontWeight: 700,
+              letterSpacing: '.2rem',
+              color: 'inherit',
+              textDecoration: 'none',
             }}
           >
-            <Box display={'flex'} alignItems={'center'}>
-              <StoreIcon sx={{ mr: 1 }} />
-              <Typography
-                variant='h6'
-                onClick={() => {
-                  navigate('/');
-                }}
-                style={{
-                  cursor: 'pointer',
-                }}
-              >
-                Sell Smart
-              </Typography>
-            </Box>
-            <Box display={'flex'} columnGap={'2rem'}>
-              {!state.userId ? (
-                <>
-                  <Button
-                    variant='outlined'
-                    color='inherit'
-                    onClick={handleLoginClick}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    variant='contained'
-                    sx={{
-                      background: 'white',
-                      color: (theme) => theme.palette.primary.main,
-                      ':hover': {
-                        color: (theme) => theme.palette.primary.main,
-                        background: '#e1e1e1',
-                      },
-                    }}
-                    onClick={handleCreateAccountClick}
-                  >
-                    Create Account
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {userName && (
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                      }}
-                      onClick={onProfileClick}
-                    >
-                      <Avatar sx={{ mr: 1 }}>{userName[0]}</Avatar>
-                      <Typography variant='body1'>{userName}</Typography>
-                    </div>
-                  )}
-                  <IconButton
-                    color='inherit'
-                    onClick={() => {
-                      navigate('/chats');
-                    }}
-                  >
-                    <ChatIcon />
-                  </IconButton>
-                  <Button
-                    variant='contained'
-                    color='secondary'
-                    endIcon={<AddIcon />}
-                    onClick={handleSellClick}
-                  >
-                    Sell
-                  </Button>
-                  <IconButton color='inherit' onClick={handleLogoutClick}>
-                    <LogoutIcon />
-                  </IconButton>
-                </>
-              )}
-            </Box>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
-    </>
+            Sell Smart
+          </Typography>
+        </Box>
+        {/* Mobile */}
+        <Box
+          sx={{
+            display: { xs: 'flex', md: 'none' },
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <Box
+            display={'flex'}
+            justifyContent='flex-start'
+            alignItems={'center'}
+            flexGrow={1}
+          >
+            <StoreIcon sx={{ mr: 1 }} />
+            <Typography
+              variant='h6'
+              noWrap
+              component='a'
+              href='/'
+              sx={{
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              Sell Smart
+            </Typography>
+          </Box>
+        </Box>
+        {/* New Sell Button */}
+        <Button
+          variant='contained'
+          color='secondary'
+          endIcon={<Add />}
+          onClick={onSellClick}
+          sx={{ marginRight: '1rem', paddingInline: '2rem' }}
+        >
+          Sell
+        </Button>
+        {/* User Menu */}
+        <Box sx={{ flexGrow: 0 }}>
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            {userName ? (
+              <Avatar sx={{ mr: 1 }}>{userName[0]}</Avatar>
+            ) : (
+              <Avatar sx={{ mr: 1 }}>
+                <ManageAccountsIcon />
+              </Avatar>
+            )}
+          </IconButton>
+          <Menu
+            sx={{ mt: '45px' }}
+            id='menu-appbar'
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {userName
+              ? profilePages.map((setting) => (
+                  <MenuItem key={setting.name} onClick={setting.onClick}>
+                    {setting.icon}
+                    <Typography ml={2} py={1} textAlign='center'>
+                      {setting.name}
+                    </Typography>
+                  </MenuItem>
+                ))
+              : newUserMenu.map((setting) => (
+                  <MenuItem key={setting.name} onClick={setting.onClick}>
+                    {setting.icon}
+                    <Typography ml={2} py={1} textAlign='center'>
+                      {setting.name}
+                    </Typography>
+                  </MenuItem>
+                ))}
+          </Menu>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
+export default MainAppBar;

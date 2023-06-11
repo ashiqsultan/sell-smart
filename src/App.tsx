@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import { AppContextProvider } from './context/AppContext';
 import AppBar from './components/AppBar';
 import CreatePost from './components/CreatePosts';
@@ -24,7 +25,7 @@ const theme = createTheme({
 
 function App() {
   const appStyle = {
-    margin: '10px',
+    margin: '10px 14px',
     [theme.breakpoints.up('md')]: {
       margin: '20px 50px',
     },
@@ -38,6 +39,7 @@ function App() {
       <Router>
         <AppContextProvider>
           <AppBar />
+          <CssBaseline />
           <Box sx={appStyle}>
             <Routes>
               <Route path='/' element={<Home />} />
