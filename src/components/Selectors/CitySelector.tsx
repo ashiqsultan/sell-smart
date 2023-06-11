@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { getByStateId, ICity } from '../../api/cities';
 import { AppContext } from '../../context/AppContext';
 
 const CitySelector: React.FC = () => {
   const { state, dispatch } = useContext(AppContext);
 
-  const handleCityChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleCityChange = (event: any) => {
     const cityId = event.target.value as string;
     dispatch({ type: 'SET_CITY_ID', payload: cityId });
   };

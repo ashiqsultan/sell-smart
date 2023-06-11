@@ -170,7 +170,7 @@ const CreatePostForm = () => {
           <StateSelector />
         </div>
         <div style={styles.formItem}>
-          <CitySelector stateId={state} />
+          <CitySelector />
         </div>
         <TextField
           label='Description'
