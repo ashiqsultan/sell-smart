@@ -23,7 +23,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesChange }) => {
     onDrop,
     accept: {
       'image/png': ['.png'],
-      'image/jpeg': ['.jpeg'],
+      'image/jpeg': ['.jpeg', '.jpg'],
+      'image/webp': ['.webp'],
+      'image/avif': ['.avif'],
     },
     maxSize: 5 * 1024 * 1024, // 5MB
   });
