@@ -46,7 +46,7 @@ const PostImageViewer: React.FC<IPostImageViewerProps> = ({ imageIds }) => {
               src={item.href}
               alt='Post Image'
               style={{
-                width: '50%',
+                width: '80%',
                 height: '20%',
                 marginBottom: '10px',
               }}
