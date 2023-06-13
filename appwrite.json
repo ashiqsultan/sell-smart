@@ -1,18 +1,18 @@
 {
-  "projectId": "demo_project",
-  "projectName": "demo_project",
+  "projectId": "64884dd1255c301bd1ad",
+  "projectName": "sell_smart",
   "functions": [
     {
-      "$id": "648453246a03c181a2e4",
-      "name": "clean_posts_func",
+      "$id": "648899b69a8f911696af",
+      "name": "post_sanitizer",
       "runtime": "node-16.0",
-      "path": "functions/clean_posts_func",
+      "path": "functions/post_sanitizer",
       "entrypoint": "src/index.js",
       "ignore": ["node_modules", ".npm"],
       "execute": [],
       "events": [
-        "databases.6476077a857050fb07e9.collections.64763c98e85448c672e1.documents.*.create",
-        "databases.6476077a857050fb07e9.collections.64763c98e85448c672e1.documents.*.update"
+        "databases.64884eb24476ed69928f.collections.648885c4e0a3b566339e.documents.*.create",
+        "databases.64884eb24476ed69928f.collections.648885c4e0a3b566339e.documents.*.update"
       ],
       "schedule": "",
       "timeout": 15

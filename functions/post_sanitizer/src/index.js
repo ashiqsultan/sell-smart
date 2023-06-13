@@ -1,6 +1,6 @@
 const sdk = require('node-appwrite');
 
-const badWords = ['alcohol', 'gun', 'drug','cigar'];
+const badWords = ['alcohol', 'gun', 'drug', 'cigar'];
 
 function cleanSentence(stringToClean) {
   const regexPattern = new RegExp(badWords.join('|'), 'gi');
@@ -12,7 +12,7 @@ function cleanSentence(stringToClean) {
 
 module.exports = async function (req, res) {
   try {
-    const PROJECT_ID = 'demo_project';
+    const PROJECT_ID = req.variables['PROJECT_ID'];
     const API_KEY = req.variables['API_KEY'];
     const DATABASE_ID = req.variables['DATABASE_ID'];
     const POST_COLLECTION_ID = req.variables['POST_COLLECTION_ID'];
@@ -30,13 +30,18 @@ module.exports = async function (req, res) {
     const updatedTitle = cleanSentence(title);
     const updatedDescription = cleanSentence(description);
 
-    const updatedDoc = await database.updateDocument(
-      DATABASE_ID,
-      POST_COLLECTION_ID,
-      $id,
-      { title: updatedTitle, description: updatedDescription }
-    );
-    console.log('Document updated:', updatedDoc);
+    // Check if there is an actual change
+    if (title !== updatedTitle || description !== updatedDescription) {
+      const updatedDoc = await database.updateDocument(
+        DATABASE_ID,
+        POST_COLLECTION_ID,
+        $id,
+        { title: updatedTitle, description: updatedDescription }
+      );
+      console.log('Document updated:', updatedDoc);
+    } else {
+      console.log('No changes detected. Skipping document update.');
+    }
   } catch (error) {
     console.error('Error updating document:', error);
   }
