@@ -46,7 +46,7 @@ const initialState: IAppState = {
   minPrice: null,
   maxPrice: null,
   userId: '',
-  limit: 2,
+  limit: 10,
   offset: 0,
 };
 
