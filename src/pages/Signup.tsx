@@ -70,7 +70,7 @@ const SignUp: React.FC = () => {
       if (newUserDetails.$id) {
         // Show success message
         setSuccessMessage(
-          'Account created successfully. Redirecting you to Home page.'
+          'Account created successfully. Redirecting you to Login page.'
         );
         // Reset form
         setEmail('');
@@ -80,7 +80,7 @@ const SignUp: React.FC = () => {
         setPhoneNumber('');
         // Navigate to homepage
         setTimeout(() => {
-          navigate('/');
+          navigate('/login');
         }, 2000);
       }
     } catch (error) {
