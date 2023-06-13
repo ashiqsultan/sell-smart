@@ -40,10 +40,14 @@ const PostList: React.FC = () => {
         }}
       />
       {state.filteredPosts.length === 0 && state.offset === 0 && (
-        <Typography variant='h6'> No Posts available</Typography>
+        <Box display={'flex'} justifyContent={'center'} my={4}>
+          <Typography variant='h6'> No Posts available</Typography>
+        </Box>
       )}
       {state.filteredPosts.length === 0 && state.offset > 0 && (
-        <Typography variant='h6'> No more Posts available</Typography>
+        <Box display={'flex'} justifyContent={'center'} my={4}>
+          <Typography variant='h6'> No more Posts available</Typography>
+        </Box>
       )}
       <List>
         {state.filteredPosts.map((post) => (
