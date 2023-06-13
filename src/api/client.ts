@@ -1,8 +1,9 @@
 import { Client } from 'appwrite';
+import config from '../config';
 
 const env = {
   endpoint: 'https://cloud.appwrite.io/v1',
-  project: 'demo_project',
+  project: config.project_id,
 };
 
 let client: Client | null = null;

@@ -1,17 +1,17 @@
 const config = {
-  database_id: '6476077a857050fb07e9',
+  project_id: '64884dd1255c301bd1ad',
+  database_id: '64884eb24476ed69928f',
   collectionIds: {
-    states: '647615a4d88bb3788849',
-    cities: '64761569404212224932',
-    user_info: '64760786370d74c148cc',
-    posts: '64763c98e85448c672e1',
-    categories: '64763bb560b2e7b968ce',
-    user_details: '647b29c041bf45439256',
-    chats: '647c7086e456637205ea',
-    messages: '6485acdfa4aa63b55965',
+    states: '64887cd67bc409622368',
+    cities: '64887d6681c40f38330d',
+    posts: '648885c4e0a3b566339e',
+    categories: '64884eff77e731d60741',
+    user_details: '64887f379b5be4bde451',
+    chats: '64887f902e7019837024',
+    messages: '64888017e5e54ab4ff28',
   },
   buckets: {
-    post_images: '64786f3fea694831764f',
+    post_images: '64884e873050fbe97fe5',
   },
 };
 export default config;
