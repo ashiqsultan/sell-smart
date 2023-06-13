@@ -72,7 +72,7 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
             />
           )}
         </Grid>
-        <Grid item xs={isSessionUser ? 8 : 9}>
+        <Grid item xs={isSessionUser ? 7 : 9} md={isSessionUser ? 8 : 9}>
           <CardContent onClick={handleCardClick}>
             <Typography variant='h6' component='div'>
               {post.title}
@@ -90,7 +90,7 @@ const PostListItem: React.FC<PostListItemProps> = ({ post }) => {
           </CardContent>
         </Grid>
         {isSessionUser && (
-          <Grid item xs={1} display={'flex'} alignItems={'center'}>
+          <Grid item xs={2} md={1} display={'flex'} alignItems={'center'}>
             <IconButton onClick={handleEditClick}>
               <EditIcon />
             </IconButton>
